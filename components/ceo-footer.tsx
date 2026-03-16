@@ -61,7 +61,7 @@ export function CeoFooter() {
               </div>
 
               <blockquote className="text-xl md:text-2xl font-inter font-light text-white/90 leading-relaxed mb-8 border-l-2 border-teal pl-6">
-                "Un software es tan bueno como la mente que lo diseña. En ConSafeDev, no escribimos líneas de código; construimos activos digitales resilientes. El software es una inversión, y mi compromiso es garantizar que retorne con creces."
+                &quot;Un software es tan bueno como la mente que lo diseña. En ConSafeDev, no escribimos líneas de código; construimos activos digitales resilientes. El software es una inversión, y mi compromiso es garantizar que retorne con creces.&quot;
               </blockquote>
 
               <div className="grid sm:grid-cols-2 gap-6 mb-10">

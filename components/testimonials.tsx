@@ -98,7 +98,7 @@ export function Testimonials() {
                 </div>
 
                 <p className="text-white/80 font-inter leading-relaxed mb-8 flex-grow relative z-10">
-                  "{testimonial.content}"
+                  &quot;{testimonial.content}&quot;
                 </p>
 
                 <div className="mt-auto pt-6 border-t border-white/10">

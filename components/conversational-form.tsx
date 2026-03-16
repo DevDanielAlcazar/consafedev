@@ -11,7 +11,11 @@ import { es } from 'date-fns/locale';
 
 const PROCESS_OPTIONS = ['Ventas', 'Operación', 'Administración', 'Otro'];
 const PREFERENCE_OPTIONS = ['Google Meet', 'Llamada Telefónica', 'Solo Email'] as const;
-const TIME_SLOTS = ['10:00 AM', '11:30 AM', '02:00 PM', '04:00 PM'];
+const TIME_SLOTS = [
+  '07:00 AM', '08:00 AM', '09:00 AM', '10:00 AM', 
+  '11:00 AM', '12:00 PM', '01:00 PM', '02:00 PM', 
+  '03:00 PM', '04:00 PM', '05:00 PM', '06:00 PM', '07:00 PM'
+];
 
 export function ConversationalForm() {
   const [step, setStep] = useState(0);
@@ -166,13 +170,13 @@ export function ConversationalForm() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-white/70 mb-1">Email Corporativo</label>
+                      <label className="block text-sm font-medium text-white/70 mb-1">Correo Electrónico</label>
                       <input 
                         type="email" 
                         value={formData.email || ''}
                         onChange={(e) => updateData({ email: e.target.value })}
                         className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-teal/50 focus:border-transparent transition-all"
-                        placeholder="daniel@consafedev.com"
+                        placeholder="ejemplo@correo.com"
                       />
                     </div>
                   </div>
@@ -248,14 +252,15 @@ export function ConversationalForm() {
                         mode="single"
                         selected={date}
                         onSelect={setDate}
-                        disabled={(date) => date < new Date() || date.getDay() === 0 || date.getDay() === 6}
+                        disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
+                        locale={es}
                         className="text-white"
                       />
                     </div>
 
                     <div className="space-y-4">
                       <h4 className="text-sm font-medium text-white/70 mb-2">Horarios Disponibles</h4>
-                      <div className="grid grid-cols-2 gap-3">
+                      <div className="grid grid-cols-3 gap-2 max-h-64 overflow-y-auto pr-2 custom-scrollbar">
                         {TIME_SLOTS.map((t) => (
                           <button
                             key={t}

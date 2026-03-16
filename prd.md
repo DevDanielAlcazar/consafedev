@@ -16,6 +16,7 @@ La arquitectura del proyecto está basada en **Next.js 16 + React 19** con un di
    - Tipografía configurada: *Space Grotesk* (Títulos) e *Inter* (Cuerpo).
    - Componentes UI reutilizables: `GlassCard` (Efecto Liquid Glass con bordes translúcidos y desenfoque).
    - Logo SVG personalizado integrado en el Navbar.
+   - **Navbar Inteligente**: Animación dinámica que oculta la barra al hacer scroll hacia abajo y la muestra al subir, mejorando la experiencia de usuario (UX).
 
 2. **Sección Hero (Fascinación Inicial)**
    - Titular de impacto enfocado en rentabilidad.
@@ -37,9 +38,15 @@ La arquitectura del proyecto está basada en **Next.js 16 + React 19** con un di
 
 6. **Formulario Conversacional (Cierre de Venta)**
    - Componente `conversational-form.tsx` con flujo de 4 pasos (Proceso -> Contacto -> Preferencia -> Fecha/Hora).
-   - Integración de calendario moderno (`react-day-picker`).
+   - Flexibilidad B2B/B2C: Solicita "Correo Electrónico" en lugar de corporativo para no limitar a PYMES.
+   - Calendario moderno (`react-day-picker`) localizado al **Español**, con disponibilidad de Lunes a Domingo.
+   - Selección de horarios ampliada de **7:00 AM a 7:00 PM** con UI optimizada (scroll personalizado).
    - Animaciones de transición suaves entre pasos y pantalla de éxito personalizada.
-   - **Server Action (`app/actions/schedule.ts`)** configurada para enviar los datos al Webhook de n8n: `https://n8n.ebillia.dpdns.org/webhook/d542c4b4-9839-49b4-ae53-b979f6e8f987`.
+   - **Server Action (`app/actions/schedule.ts`)** configurada para enviar los datos al Webhook de n8n.
+
+7. **Integración Backend (n8n)**
+   - Flujo de n8n configurado y activo.
+   - Escucha el Webhook, añade una fila en Google Sheets y notifica por Telegram de forma inmediata.
 
 7. **CEO Footer (Confianza Final)**
    - Componente `ceo-footer.tsx` que presenta a Jesús Daniel Nava Alcázar.
@@ -54,19 +61,13 @@ La arquitectura del proyecto está basada en **Next.js 16 + React 19** con un di
 
 ## ⏳ Lo que falta por integrar (Pendiente / Próximos Pasos)
 
-1. **Configuración del Flujo en n8n (Backend)**
-   - Aunque el frontend ya envía los datos al webhook correctamente, es necesario configurar el flujo dentro de n8n para:
-     - Recibir el payload JSON.
-     - Registrar los datos en Google Sheets o un CRM.
-     - Disparar alertas inmediatas a Telegram/Slack para garantizar una respuesta en menos de 5 minutos.
-
-2. **Imágenes Definitivas**
+1. **Imágenes Definitivas**
    - Actualmente se utilizan imágenes de alta calidad de Unsplash como *placeholders* (Hero y CEO).
    - *Acción requerida*: Reemplazar estas URLs por las fotografías reales del equipo y del CEO cuando estén disponibles, o mantenerlas si se ajustan a la visión final.
 
-3. **Optimización de Rendimiento (Opcional pero recomendado)**
+2. **Optimización de Rendimiento (Opcional pero recomendado)**
    - Configurar Google Analytics 4 (GA4) o PostHog para medir la interacción con la Calculadora de ROI y el embudo del formulario conversacional.
    - Verificar el perfil de Google Business (Google Mi Negocio) para asegurar que la dirección y datos coincidan exactamente con el JSON-LD implementado.
 
-4. **Páginas de Políticas (Legal)**
+3. **Páginas de Políticas (Legal)**
    - Crear páginas de "Aviso de Privacidad" y "Términos y Condiciones" (requerido para formularios de captación de leads en México).
