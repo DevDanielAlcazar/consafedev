@@ -1,0 +1,32 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@theme {
+  --color-navy: #1E3A8A;
+  --color-navy-dark: #0B1B42; /* A darker shade for deep background contrast */
+  --color-teal: #005F6B;
+  --color-coral: #FF6F61;
+  --color-coral-hover: #FF5240;
+}
+
+body {
+  background-color: var(--color-navy-dark);
+  color: #ffffff;
+  overflow-x: hidden;
+}
+
+/* Base Liquid Glass Utilities */
+.liquid-glass {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
+
+.text-gradient {
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-image: linear-gradient(to right, #ffffff, #a5b4fc);
+}
