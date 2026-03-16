@@ -38,8 +38,9 @@ La arquitectura del proyecto está basada en **Next.js 16 + React 19** con un di
 
 6. **Formulario Conversacional (Cierre de Venta)**
    - Componente `conversational-form.tsx` con flujo de 4 pasos (Proceso -> Contacto -> Preferencia -> Fecha/Hora).
-   - Flexibilidad B2B/B2C: Solicita "Correo Electrónico" en lugar de corporativo para no limitar a PYMES.
+   - Flexibilidad B2B/B2C: Solicita "Correo Electrónico" en lugar de corporativo. Los campos "Empresa" y "Teléfono" son opcionales (se envía "NA" por defecto al webhook si están vacíos).
    - Calendario moderno (`react-day-picker`) localizado al **Español**, con disponibilidad de Lunes a Domingo.
+   - Feedback visual en el calendario: Días pasados en gris (deshabilitados) y un mensaje claro de la fecha seleccionada.
    - Selección de horarios ampliada de **7:00 AM a 7:00 PM** con UI optimizada (scroll personalizado).
    - Animaciones de transición suaves entre pasos y pantalla de éxito personalizada.
    - **Server Action (`app/actions/schedule.ts`)** configurada para enviar los datos al Webhook de n8n.

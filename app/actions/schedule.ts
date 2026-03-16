@@ -5,6 +5,7 @@ export type ScheduleFormData = {
   name?: string;
   company?: string;
   email?: string;
+  phone?: string;
   preference?: string;
   date?: string;
   time?: string;
@@ -14,13 +15,20 @@ export async function submitSchedule(data: ScheduleFormData) {
   try {
     const webhookUrl = 'https://n8n.ebillia.dpdns.org/webhook/d542c4b4-9839-49b4-ae53-b979f6e8f987';
     
+    // Preparamos el payload con valores por defecto 'NA' para campos opcionales vacíos
+    const payload = {
+      ...data,
+      company: data.company?.trim() ? data.company.trim() : 'NA',
+      phone: data.phone?.trim() ? data.phone.trim() : 'NA',
+    };
+
     // Enviamos los datos al webhook de n8n
     const response = await fetch(webhookUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(payload),
     });
 
     if (!response.ok) {

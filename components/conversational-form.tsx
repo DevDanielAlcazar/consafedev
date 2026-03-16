@@ -39,8 +39,8 @@ export function ConversationalForm() {
   };
 
   const handleSubmit = () => {
-    if (!formData.process || !formData.name || !formData.company || !formData.email || !formData.preference || !date || !formData.time) {
-      setError('Por favor completa todos los campos.');
+    if (!formData.process || !formData.name || !formData.email || !formData.preference || !date || !formData.time) {
+      setError('Por favor completa todos los campos obligatorios.');
       return;
     }
 
@@ -156,17 +156,27 @@ export function ConversationalForm() {
                         value={formData.name || ''}
                         onChange={(e) => updateData({ name: e.target.value })}
                         className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-teal/50 focus:border-transparent transition-all"
-                        placeholder="Ej. Jesús Daniel Nava"
+                        placeholder="Tu nombre de contacto"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-white/70 mb-1">Empresa</label>
+                      <label className="block text-sm font-medium text-white/70 mb-1">Empresa <span className="text-white/30 text-xs font-normal">(Opcional)</span></label>
                       <input 
                         type="text" 
                         value={formData.company || ''}
                         onChange={(e) => updateData({ company: e.target.value })}
                         className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-teal/50 focus:border-transparent transition-all"
                         placeholder="ConSafeDev"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-white/70 mb-1">Teléfono <span className="text-white/30 text-xs font-normal">(Opcional)</span></label>
+                      <input 
+                        type="tel" 
+                        value={formData.phone || ''}
+                        onChange={(e) => updateData({ phone: e.target.value })}
+                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-teal/50 focus:border-transparent transition-all"
+                        placeholder="+52 123 456 7890"
                       />
                     </div>
                     <div>
@@ -186,7 +196,7 @@ export function ConversationalForm() {
                     </button>
                     <button 
                       onClick={nextStep} 
-                      disabled={!formData.name || !formData.company || !formData.email}
+                      disabled={!formData.name || !formData.email}
                       className="px-6 py-3 rounded-xl bg-teal hover:bg-teal/90 text-white font-semibold transition-all shadow-[0_0_20px_rgba(0,95,107,0.3)] disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                     >
                       Siguiente <ArrowRight className="w-4 h-4" />
@@ -247,7 +257,7 @@ export function ConversationalForm() {
                   <h3 className="text-2xl font-space font-bold mb-8 text-center">Seleccione Fecha y Hora</h3>
                   
                   <div className="grid md:grid-cols-2 gap-8">
-                    <div className="liquid-glass rounded-2xl p-4 border border-white/10 flex justify-center">
+                    <div className="liquid-glass rounded-2xl p-4 border border-white/10 flex flex-col items-center justify-center">
                       <Calendar
                         mode="single"
                         selected={date}
@@ -256,6 +266,16 @@ export function ConversationalForm() {
                         locale={es}
                         className="text-white"
                       />
+                      {date && (
+                        <motion.div 
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="mt-4 px-4 py-2 rounded-lg bg-teal/20 border border-teal/30 text-teal-50 text-sm font-medium text-center w-full"
+                        >
+                          Seleccionaste: <br/>
+                          <span className="text-white font-bold capitalize">{format(date, "EEEE d 'de' MMMM", { locale: es })}</span>
+                        </motion.div>
+                      )}
                     </div>
 
                     <div className="space-y-4">
