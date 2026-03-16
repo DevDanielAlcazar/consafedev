@@ -346,7 +346,7 @@ export function ConversationalForm() {
                   </h3>
                   
                   <p className="text-lg text-white/80 font-inter max-w-md leading-relaxed">
-                    Jesús Daniel ya tiene tu caso en su escritorio. Nos vemos el <strong className="text-white">{date ? format(date, "d 'de' MMMM", { locale: es }) : ''}</strong> a las <strong className="text-white">{formData.time}</strong> vía <strong className="text-white">{formData.preference}</strong>.
+                    En ConSafeDev ya tenemos tu caso en nuestro escritorio. Nos vemos el <strong className="text-white">{date ? format(date, "d 'de' MMMM", { locale: es }) : ''}</strong> a las <strong className="text-white">{formData.time}</strong> vía <strong className="text-white">{formData.preference}</strong>.
                   </p>
 
                   <p className="mt-8 text-sm text-white/50 italic">
