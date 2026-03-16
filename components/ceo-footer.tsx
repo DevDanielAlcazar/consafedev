@@ -5,6 +5,7 @@ import { Shield, Globe, Award, ChevronRight } from 'lucide-react';
 import { GlassCard } from './ui/glass-card';
 import Link from 'next/link';
 import Image from 'next/image';
+import ceoImage from '@/src/ceo.png';
 
 export function CeoFooter() {
   return (
@@ -27,7 +28,7 @@ export function CeoFooter() {
             >
               <div className="aspect-[3/4] rounded-2xl bg-gradient-to-br from-navy to-teal/20 border border-white/10 relative overflow-hidden group shadow-2xl">
                 <Image 
-                  src="https://drive.google.com/file/d/1HBpPicZMFow4Le80a4yaGG9Gydl6C7W-/view?usp=drive_link" 
+                  src={ceoImage} 
                   alt="Jesús Daniel Nava Alcázar - CEO de ConSafeDev" 
                   fill
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
