@@ -42,7 +42,7 @@ export function Calendar({
         day_today: 'bg-white/5 text-white',
         day_outside:
           'day-outside text-white/30 aria-selected:bg-white/10 aria-selected:text-white/50',
-        day_disabled: 'text-white/30 opacity-40 cursor-not-allowed hover:bg-transparent hover:text-white/30',
+        day_disabled: 'text-white/20 opacity-30 cursor-not-allowed line-through hover:bg-transparent hover:text-white/20',
         day_range_middle:
           'aria-selected:bg-white/5 aria-selected:text-white',
         day_hidden: 'invisible',
