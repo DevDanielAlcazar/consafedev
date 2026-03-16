@@ -27,7 +27,7 @@ export function CeoFooter() {
             >
               <div className="aspect-[3/4] rounded-2xl bg-gradient-to-br from-navy to-teal/20 border border-white/10 relative overflow-hidden group shadow-2xl">
                 <Image 
-                  src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=2000" 
+                  src="https://drive.google.com/file/d/1HBpPicZMFow4Le80a4yaGG9Gydl6C7W-/view?usp=drive_link" 
                   alt="Jesús Daniel Nava Alcázar - CEO de ConSafeDev" 
                   fill
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
