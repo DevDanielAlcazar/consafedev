@@ -1,6 +1,7 @@
 import { Navbar } from "@/components/navbar";
 import { Hero } from "@/components/hero";
 import { BentoServices } from "@/components/bento-services";
+import { Testimonials } from "@/components/testimonials";
 import { RoiCalculator } from "@/components/roi-calculator";
 import { ConversationalForm } from "@/components/conversational-form";
 import { CeoFooter } from "@/components/ceo-footer";
@@ -11,6 +12,7 @@ export default function Home() {
       <Navbar />
       <Hero />
       <BentoServices />
+      <Testimonials />
       <RoiCalculator />
       <ConversationalForm />
       <CeoFooter />

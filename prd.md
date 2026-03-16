@@ -1,0 +1,72 @@
+# Product Requirements Document (PRD) - ConSafeDev
+
+## Visión General
+ConSafeDev se posiciona como una fábrica de soluciones de software de alto rendimiento, apalancando la experiencia de su CEO, Jesús Daniel Nava Alcázar. La propuesta de valor central es: **"El software dejó de ser un gasto y se convierte en el motor de rentabilidad de la empresa"**.
+
+La arquitectura del proyecto está basada en **Next.js 16 + React 19** con un diseño ultra-moderno (**Liquid Glass / Glassmorphism 2.0**) enfocado en la conversión B2B High-Ticket.
+
+---
+
+## Estado de Implementación
+
+### ✅ Lo que se ha implementado (Completado)
+
+1. **Identidad Visual y Diseño Base**
+   - Paleta de colores implementada: *Deep Navy* (Base), *Transformative Teal* (Acento), *Hyper-Coral* (Conversión).
+   - Tipografía configurada: *Space Grotesk* (Títulos) e *Inter* (Cuerpo).
+   - Componentes UI reutilizables: `GlassCard` (Efecto Liquid Glass con bordes translúcidos y desenfoque).
+   - Logo SVG personalizado integrado en el Navbar.
+
+2. **Sección Hero (Fascinación Inicial)**
+   - Titular de impacto enfocado en rentabilidad.
+   - Animaciones *Kinetic Typography* con Framer Motion.
+   - Imagen de equipo de ingeniería con *Glass Overlay* y métricas flotantes holográficas.
+   - *Nota: Se eliminó el globo de "Boutique de Ingeniería Universal" según solicitud.*
+
+3. **Bento Grid de Servicios (Claridad y Escaneo)**
+   - Componente `bento-services.tsx` que muestra los pilares: Desarrollo Web/Mobile, Sistemas de Misión Crítica, IA & Automatización, y Modernización de Legados.
+
+4. **Testimonios (Prueba Social)**
+   - Componente `testimonials.tsx` integrado.
+   - Casos de éxito convincentes y realistas con empresas de alto nivel (Arca Continental, Cadena Comercial OXXO, SIEMENS).
+   - Diseño en tarjetas de cristal con animaciones escalonadas.
+
+5. **Calculadora de ROI (Validación Lógica)**
+   - Componente interactivo `roi-calculator.tsx`.
+   - Permite al usuario ajustar horas manuales y costo por hora para visualizar el "Costo Anual de Ineficiencia" y el "Ahorro Anual Estimado (85%)".
+
+6. **Formulario Conversacional (Cierre de Venta)**
+   - Componente `conversational-form.tsx` con flujo de 4 pasos (Proceso -> Contacto -> Preferencia -> Fecha/Hora).
+   - Integración de calendario moderno (`react-day-picker`).
+   - Animaciones de transición suaves entre pasos y pantalla de éxito personalizada.
+   - **Server Action (`app/actions/schedule.ts`)** configurada para enviar los datos al Webhook de n8n: `https://n8n.ebillia.dpdns.org/webhook/d542c4b4-9839-49b4-ae53-b979f6e8f987`.
+
+7. **CEO Footer (Confianza Final)**
+   - Componente `ceo-footer.tsx` que presenta a Jesús Daniel Nava Alcázar.
+   - Destaca métricas reales (78% reducción de incidencias, impacto global).
+   - Fotografía profesional integrada con diseño editorial.
+
+8. **SEO Local y Metadatos**
+   - Metadatos dinámicos en `app/layout.tsx` optimizados para "Desarrollo de Software en León, Gto".
+   - Integración de Schema Markup (JSON-LD) tipo `ProfessionalService` para posicionamiento en Google Maps.
+
+---
+
+## ⏳ Lo que falta por integrar (Pendiente / Próximos Pasos)
+
+1. **Configuración del Flujo en n8n (Backend)**
+   - Aunque el frontend ya envía los datos al webhook correctamente, es necesario configurar el flujo dentro de n8n para:
+     - Recibir el payload JSON.
+     - Registrar los datos en Google Sheets o un CRM.
+     - Disparar alertas inmediatas a Telegram/Slack para garantizar una respuesta en menos de 5 minutos.
+
+2. **Imágenes Definitivas**
+   - Actualmente se utilizan imágenes de alta calidad de Unsplash como *placeholders* (Hero y CEO).
+   - *Acción requerida*: Reemplazar estas URLs por las fotografías reales del equipo y del CEO cuando estén disponibles, o mantenerlas si se ajustan a la visión final.
+
+3. **Optimización de Rendimiento (Opcional pero recomendado)**
+   - Configurar Google Analytics 4 (GA4) o PostHog para medir la interacción con la Calculadora de ROI y el embudo del formulario conversacional.
+   - Verificar el perfil de Google Business (Google Mi Negocio) para asegurar que la dirección y datos coincidan exactamente con el JSON-LD implementado.
+
+4. **Páginas de Políticas (Legal)**
+   - Crear páginas de "Aviso de Privacidad" y "Términos y Condiciones" (requerido para formularios de captación de leads en México).

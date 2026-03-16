@@ -42,11 +42,6 @@ export function Hero() {
           animate="visible"
           className="flex flex-col gap-8"
         >
-          <motion.div variants={itemVariants} className="inline-flex items-center gap-2 px-4 py-2 rounded-full liquid-glass w-fit border-teal/30">
-            <span className="w-2 h-2 rounded-full bg-teal animate-pulse" />
-            <span className="text-sm font-medium text-teal-50">Boutique de Ingeniería Universal</span>
-          </motion.div>
-
           <motion.h1 variants={itemVariants} className="text-5xl md:text-6xl lg:text-7xl font-space font-bold leading-[1.1] tracking-tight">
             El Software Dejó de Ser un Gasto. <br />
             <span className="text-gradient">Conviértalo en su Motor de Rentabilidad.</span>
