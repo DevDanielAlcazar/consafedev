@@ -1,122 +1,660 @@
-# Guía de Despliegue: ConSafeDev en Servidor Debian con Cloudflared
+# Despliegue de ConSafeDev
 
-Esta guía detalla cómo desplegar y actualizar tu aplicación Next.js en tu servidor Debian usando Git, PM2 (para mantener la app viva y aislada) y Cloudflared (para exponerla de forma segura).
-
-## 1. Requisitos Previos en el Servidor Debian
-
-Asegúrate de tener instalados los siguientes componentes:
-
-```bash
-# Actualizar repositorios
-sudo apt update && sudo apt upgrade -y
-
-# Instalar Git, Curl y Build-Essential
-sudo apt install git curl build-essential -y
-
-# Instalar Node.js (Recomendado v20 LTS)
-curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-sudo apt install -y nodejs
-
-# Instalar PM2 globalmente (Gestor de procesos para Node.js)
-sudo npm install -g pm2
-```
-
-## 2. Clonar el Repositorio
-
-Clona tu repositorio de GitHub en el directorio donde alojarás la aplicación (por ejemplo, `/var/www/` o en tu directorio de usuario `~/`):
-
-```bash
-# Navegar al directorio deseado
-cd ~
-
-# Clonar el repositorio (reemplaza con tu URL de GitHub)
-git clone https://github.com/TU_USUARIO/TU_REPOSITORIO.git consafedev-web
-
-# Entrar al directorio del proyecto
-cd consafedev-web
-```
-
-## 3. Configuración Inicial y Primer Despliegue
-
-Instala las dependencias y compila la aplicación para producción:
-
-```bash
-# Instalar dependencias
-npm install
-
-# Compilar la aplicación Next.js
-npm run build
-```
-
-Una vez compilada, inicia la aplicación usando PM2. Esto asegura que la aplicación se ejecute en segundo plano, se reinicie si falla y no interfiera con otros servicios.
-
-```bash
-# Iniciar la aplicación en el puerto 3000 (puedes cambiarlo si el 3000 está ocupado)
-pm2 start npm --name "consafedev-web" -- start --port 3000
-
-# Guardar la lista de procesos de PM2 para que arranquen al reiniciar el servidor
-pm2 save
-pm2 startup
-```
-*(Sigue las instrucciones que te dé el comando `pm2 startup` para configurar el inicio automático).*
-
-## 4. Exponer mediante Cloudflared (Túnel)
-
-Ya que usas Cloudflare Tunnels, no necesitas abrir puertos en tu firewall ni configurar Nginx/Apache.
-
-1. Ve a tu panel de **Cloudflare Zero Trust** > **Networks** > **Tunnels**.
-2. Crea un nuevo túnel o edita uno existente.
-3. En la pestaña **Public Hostname**, añade una nueva ruta:
-   - **Public Hostname**: `tudominio.com` (o el subdominio que desees).
-   - **Service Type**: `HTTP`
-   - **URL**: `localhost:3000` (o el puerto que hayas configurado en PM2).
-4. Guarda los cambios. Cloudflare enrutará el tráfico de forma segura directamente a tu app Next.js.
+Este documento describe la arquitectura y el procedimiento real de despliegue de ConSafeDev en producción.
 
 ---
 
-## 5. Cómo Actualizar la Aplicación (Sin Downtime Significativo)
+## 1. Arquitectura
 
-Cuando hagas cambios en tu código y los subas a GitHub, sigue estos pasos en tu servidor Debian para actualizar la aplicación sin interferir con otros servicios:
+ConSafeDev se ejecuta en un servidor Debian utilizando Next.js Standalone y systemd.
+
+El tráfico público se expone mediante Cloudflare Tunnel.
+
+```text
+GitHub
+DevDanielAlcazar/consafedev
+        │
+        │ branch: main
+        ▼
+/opt/consafedev/app
+        │
+        │ deploy.sh
+        ▼
+Next.js Standalone
+.next/standalone/server.js
+        │
+        ▼
+consafedev.service
+        │
+        │ 127.0.0.1:3002
+        ▼
+cloudflared-consafedev.service
+        │
+        ▼
+Cloudflare Tunnel
+        │
+        ▼
+https://consafedev.qzz.io
+```
+
+---
+
+## 2. Componentes
+
+### Repositorio
+
+Repositorio GitHub:
+
+```text
+https://github.com/DevDanielAlcazar/consafedev
+```
+
+Ruta en producción:
+
+```text
+/opt/consafedev/app
+```
+
+Branch productiva:
+
+```text
+main
+```
+
+---
+
+## 3. Aplicación Next.js
+
+La aplicación utiliza:
+
+```text
+Next.js 15
+output: standalone
+```
+
+El servidor productivo generado por Next.js es:
+
+```text
+/opt/consafedev/app/.next/standalone/server.js
+```
+
+La aplicación escucha únicamente en:
+
+```text
+127.0.0.1:3002
+```
+
+El puerto no está expuesto directamente a Internet.
+
+---
+
+## 4. Servicio systemd
+
+ConSafeDev NO utiliza PM2.
+
+El proceso productivo es administrado mediante:
+
+```text
+consafedev.service
+```
+
+Archivo:
+
+```text
+/etc/systemd/system/consafedev.service
+```
+
+Configuración actual:
+
+```ini
+[Unit]
+Description=ConSafeDev Next.js App
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=daniel
+Group=daniel
+WorkingDirectory=/opt/consafedev/app
+
+Environment=NODE_ENV=production
+Environment=PORT=3002
+Environment=HOSTNAME=127.0.0.1
+
+EnvironmentFile=-/etc/consafedev.env
+
+ExecStart=/usr/bin/node /opt/consafedev/app/.next/standalone/server.js
+
+Restart=always
+RestartSec=5
+
+TimeoutStopSec=30
+KillSignal=SIGINT
+
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Comandos de administración:
 
 ```bash
-# 1. Entrar al directorio del proyecto
-cd ~/consafedev-web
+sudo systemctl status consafedev.service
+sudo systemctl restart consafedev.service
+sudo systemctl stop consafedev.service
+sudo systemctl start consafedev.service
+```
 
-# 2. Obtener los últimos cambios de GitHub
-git pull origin main
+Logs:
 
-# 3. Instalar nuevas dependencias (si las hay)
+```bash
+sudo journalctl -u consafedev.service -n 100 --no-pager
+```
+
+Logs en tiempo real:
+
+```bash
+sudo journalctl -u consafedev.service -f
+```
+
+---
+
+## 5. Cloudflare Tunnel
+
+La aplicación se publica mediante un túnel Cloudflare administrado localmente desde Debian.
+
+Servicio:
+
+```text
+cloudflared-consafedev.service
+```
+
+Configuración:
+
+```text
+/etc/cloudflared/config-consafedev.yml
+```
+
+Ingress:
+
+```yaml
+ingress:
+  - hostname: consafedev.qzz.io
+    service: http://127.0.0.1:3002
+
+  - service: http_status:404
+```
+
+El flujo es:
+
+```text
+consafedev.qzz.io
+        ↓
+Cloudflare
+        ↓
+cloudflared-consafedev.service
+        ↓
+127.0.0.1:3002
+        ↓
+Next.js
+```
+
+Durante un despliegue normal de la aplicación NO es necesario reiniciar cloudflared.
+
+Validar configuración:
+
+```bash
+sudo cloudflared \
+  --config /etc/cloudflared/config-consafedev.yml \
+  tunnel ingress validate
+```
+
+Validar regla:
+
+```bash
+sudo cloudflared \
+  --config /etc/cloudflared/config-consafedev.yml \
+  tunnel ingress rule https://consafedev.qzz.io
+```
+
+Estado:
+
+```bash
+sudo systemctl status cloudflared-consafedev.service
+```
+
+---
+
+## 6. Procedimiento normal de despliegue
+
+Los cambios deben estar previamente enviados a:
+
+```text
+origin/main
+```
+
+En el servidor:
+
+```bash
+cd /opt/consafedev/app
+```
+
+Verificar que no existan cambios locales:
+
+```bash
+git status
+```
+
+Después ejecutar:
+
+```bash
+bash deploy.sh
+```
+
+No es necesario ejecutar manualmente:
+
+```text
 npm install
-
-# 4. Recompilar la aplicación
 npm run build
+pm2 restart
+systemctl restart
+cloudflared
+```
 
-# 5. Reiniciar el proceso en PM2 para aplicar los cambios
+El script realiza automáticamente todo el procedimiento.
+
+---
+
+## 7. Qué hace deploy.sh
+
+El proceso realiza:
+
+```text
+git fetch
+        ↓
+verificar working tree
+        ↓
+identificar origin/main
+        ↓
+crear build temporal
+        ↓
+npm ci
+        ↓
+npm run build
+        ↓
+preparar Next.js Standalone
+        ↓
+crear backup de producción
+        ↓
+actualizar checkout local
+        ↓
+detener consafedev.service
+        ↓
+promover nuevo .next
+        ↓
+arrancar consafedev.service
+        ↓
+health check localhost
+        ↓
+validar asset Next.js
+        ↓
+health check Cloudflare
+        ↓
+limpieza
+```
+
+El build se realiza fuera del `.next` productivo para evitar modificar los archivos que está utilizando la aplicación mientras continúa atendiendo tráfico.
+
+---
+
+## 8. Next.js Standalone
+
+`next build` genera:
+
+```text
+.next/standalone
+```
+
+Sin embargo, los archivos:
+
+```text
+.next/static
+```
+
+deben estar disponibles dentro de:
+
+```text
+.next/standalone/.next/static
+```
+
+Por este motivo `deploy.sh` realiza:
+
+```bash
+mkdir -p .next/standalone/.next
+
+rm -rf .next/standalone/.next/static
+
+cp -a \
+  .next/static \
+  .next/standalone/.next/static
+```
+
+Si en el futuro el proyecto utiliza:
+
+```text
+public/
+```
+
+el script también lo copia a:
+
+```text
+.next/standalone/public
+```
+
+---
+
+## 9. Backups
+
+Antes de promover un nuevo build se genera un respaldo en:
+
+```text
+/opt/consafedev/backups/
+```
+
+Formato aproximado:
+
+```text
+YYYYMMDD_HHMMSS-COMMIT
+```
+
+Ejemplo:
+
+```text
+/opt/consafedev/backups/20260828_125711-81fc7a4
+```
+
+El backup contiene:
+
+```text
+git-commit.txt
+.next/
+```
+
+Estos directorios NO son aplicaciones activas ni instancias adicionales.
+
+Solo son respaldos para recuperación.
+
+---
+
+## 10. Rollback automático
+
+Durante la promoción se conserva temporalmente:
+
+```text
+.next.previous
+```
+
+Si el nuevo build no inicia o falla una validación después de la promoción, `deploy.sh` intenta automáticamente:
+
+```text
+detener consafedev.service
+        ↓
+retirar build fallido
+        ↓
+restaurar .next.previous
+        ↓
+regresar Git al commit anterior
+        ↓
+arrancar consafedev.service
+        ↓
+validar localhost
+```
+
+Cuando el deploy termina correctamente:
+
+```text
+.next.previous
+```
+
+es eliminado.
+
+---
+
+## 11. Health checks
+
+### Aplicación local
+
+```bash
+curl -I http://127.0.0.1:3002/
+```
+
+Debe responder:
+
+```text
+HTTP 200
+```
+
+### Aplicación pública
+
+```bash
+curl -I https://consafedev.qzz.io/
+```
+
+Debe responder:
+
+```text
+HTTP 200
+```
+
+### Servicio
+
+```bash
+systemctl is-active consafedev.service
+```
+
+Debe responder:
+
+```text
+active
+```
+
+---
+
+## 12. Diagnóstico
+
+### La página pública no responde
+
+Primero revisar la aplicación:
+
+```bash
+curl -I http://127.0.0.1:3002/
+```
+
+Si no responde:
+
+```bash
+sudo systemctl status consafedev.service
+```
+
+Después revisar logs:
+
+```bash
+sudo journalctl \
+  -u consafedev.service \
+  -n 100 \
+  --no-pager
+```
+
+---
+
+### Local funciona pero la URL pública no
+
+Si:
+
+```bash
+curl -I http://127.0.0.1:3002/
+```
+
+funciona pero:
+
+```bash
+curl -I https://consafedev.qzz.io/
+```
+
+no funciona, revisar:
+
+```bash
+sudo systemctl status cloudflared-consafedev.service
+```
+
+Logs:
+
+```bash
+sudo journalctl \
+  -u cloudflared-consafedev.service \
+  -n 100 \
+  --no-pager
+```
+
+Validar ingress:
+
+```bash
+sudo cloudflared \
+  --config /etc/cloudflared/config-consafedev.yml \
+  tunnel ingress validate
+```
+
+---
+
+## 13. PM2
+
+PM2 NO administra ConSafeDev.
+
+Actualmente PM2 puede administrar otras aplicaciones del servidor, pero no debe utilizarse para iniciar, detener o actualizar ConSafeDev.
+
+Por tanto, NO utilizar:
+
+```bash
+pm2 restart consafedev
+```
+
+ni:
+
+```bash
 pm2 restart consafedev-web
 ```
 
-### Script de Actualización Rápida (Opcional)
-Para facilitar las actualizaciones, puedes crear un script `deploy.sh` en la raíz de tu proyecto:
+Para ConSafeDev siempre utilizar:
 
 ```bash
-#!/bin/bash
-echo "Descargando actualizaciones..."
-git pull origin main
-
-echo "Instalando dependencias..."
-npm install
-
-echo "Compilando aplicación..."
-npm run build
-
-echo "Reiniciando servicio..."
-pm2 restart consafedev-web
-
-echo "¡Actualización completada exitosamente!"
+sudo systemctl restart consafedev.service
 ```
-Dale permisos de ejecución (`chmod +x deploy.sh`) y simplemente ejecuta `./deploy.sh` cada vez que quieras actualizar.
 
-## Resumen de Aislamiento
-- **PM2** mantiene el proceso de Node.js aislado en su propio puerto local (ej. 3000).
-- **Cloudflared** se conecta directamente a ese puerto local.
-- Esto garantiza que tus otros servicios (bases de datos, otros servidores web, etc.) no se vean afectados por los despliegues o reinicios de esta aplicación.
+o, para despliegues:
+
+```bash
+./deploy.sh
+```
+
+---
+
+## 14. Nginx
+
+Aunque Nginx existe en el servidor, actualmente no participa en la publicación de ConSafeDev.
+
+El tráfico fluye directamente:
+
+```text
+Cloudflare Tunnel
+        ↓
+127.0.0.1:3002
+        ↓
+Next.js
+```
+
+No es necesario modificar Nginx para desplegar cambios de ConSafeDev.
+
+---
+
+## 15. Variables de entorno
+
+El servicio puede cargar variables desde:
+
+```text
+/etc/consafedev.env
+```
+
+mediante:
+
+```ini
+EnvironmentFile=-/etc/consafedev.env
+```
+
+Actualmente no se utilizan variables `NEXT_PUBLIC_*`.
+
+IMPORTANTE:
+
+Las variables `NEXT_PUBLIC_*` son incorporadas por Next.js durante el build.
+
+Si en el futuro se agregan variables de este tipo, deberán estar disponibles también durante:
+
+```bash
+npm run build
+```
+
+y deberá revisarse `deploy.sh`.
+
+---
+
+## 16. Seguridad y mantenimiento
+
+No ejecutar automáticamente durante un deploy:
+
+```bash
+npm audit fix
+```
+
+ni actualizaciones mayores de dependencias.
+
+Las actualizaciones de dependencias deben probarse y desplegarse como cambios independientes.
+
+Tampoco mezclar un despliegue normal de la web con:
+
+```text
+actualización de cloudflared
+actualización de Node.js
+actualización de npm
+cambios systemd
+cambios de túnel
+```
+
+Cada modificación de infraestructura debe validarse por separado.
+
+---
+
+## 17. Resumen operativo
+
+Para un despliegue normal:
+
+```bash
+cd /opt/consafedev/app
+
+git status
+
+bash deploy.sh
+```
+
+Después verificar:
+
+```bash
+curl -I http://127.0.0.1:3002/
+
+curl -I https://consafedev.qzz.io/
+
+sudo systemctl status consafedev.service
+```
+
+Esta es la única vía oficial de despliegue de ConSafeDev.
