@@ -89,7 +89,7 @@ export function CeoFooter() {
               <div className="flex items-center gap-6 pt-6 border-t border-white/10">
                 <div className="flex-1">
                   <p className="text-sm text-white/50 font-inter">
-                    Respaldando cada línea de código de <strong className="text-white">ConSafeDev</strong>.
+                    Respaldando cada línea de código de <strong className="text-white">ConSafeDev</strong>. · Deploy validado
                   </p>
                 </div>
                 <Link 
