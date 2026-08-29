@@ -1,223 +1,131 @@
-# Implementation Prompt 01 — Foundation + Shell + Hero + Living System
+# Implementation Prompt 01 V2 — Hero + Living System
+
+## STOP BEFORE CODING
+This is a corrective V2 build after a rejected visual direction. Do not begin until you read all mandatory documents.
 
 ## Mission
-
-Rebuild only the first experience of the ConSafeDev website:
-
-1. visual foundation;
-2. persistent site shell;
-3. header/navbar;
+Implement only:
+1. visual foundation required for this prototype;
+2. Persistent Site Shell;
+3. Header/Navbar;
 4. Hero;
 5. Living System scrollytelling;
-6. initial Engineering → Clarity transition boundary.
+6. beginning of Engineering → Clarity transition.
 
-Do not build the rest of the landing page.
+Do not build the rest of the homepage.
 
 ## Mandatory pre-read
+Read in order:
+1. `ai/consafedev-site/SKILL.md`
+2. `ai/consafedev-site/SCENE_DIRECTION_V2.md`
+3. `ai/consafedev-site/EXPERIENCE_CONTRACT.md`
+4. `ai/consafedev-site/DESIGN_TOKENS.md`
+5. `ai/consafedev-site/MOTION_SPEC.md`
+6. `ai/consafedev-site/CONTENT_RULES.md`
+7. `ai/consafedev-site/DEPLOYMENT_GUARDRAILS.md`
+8. `ai/consafedev-site/QA_ACCEPTANCE.md`
 
-Read and obey:
+Then inspect the current repository before editing.
 
-- `ai/consafedev-site/SKILL.md`
-- `ai/consafedev-site/EXPERIENCE_CONTRACT.md`
-- `ai/consafedev-site/DESIGN_TOKENS.md`
-- `ai/consafedev-site/MOTION_SPEC.md`
-- `ai/consafedev-site/CONTENT_RULES.md`
-- `ai/consafedev-site/DEPLOYMENT_GUARDRAILS.md`
-- `ai/consafedev-site/QA_ACCEPTANCE.md`
+## Rejected Build 01
+The previous implementation incorrectly translated the idea into boxes/nodes, orthogonal connections, topology, ports/bus, monitoring/dashboard aesthetics, numbered phases and fake telemetry/metrics.
 
-Inspect current repository code before editing.
+That direction is rejected. Do not improve it. Do not reuse it. Start again from `SCENE_DIRECTION_V2.md`.
 
-## Repository context
+## Core creative instruction
+**Do not show software first.** Begin with fragmented operational reality. Then let the same visible fragments become understood, associated, structured, transformed, usable software and a living product.
 
-The current page is legacy and contains patterns intentionally discarded, including:
-- current liquid-glass visual language;
-- coral accent;
-- Bento services;
-- ROI calculator;
-- conversational scheduling form;
-- CEO-centric footer;
-- generic dark-agency presentation.
+The key experience is: **watching software emerge from business reality.**
 
-Do not preserve these merely because they exist.
-Keep infrastructure/runtime assumptions intact.
+## Hero
+Use exactly:
 
-## Implementation scope
-
-### A. Foundation
-
-Establish reusable brand tokens and global foundations.
-Prefer CSS custom properties/Tailwind theme tokens rather than scattered magic values.
-Do not perform broad dependency upgrades.
-
-### B. Persistent Site Shell
-
-Create a reusable shell that will later support `/`, `/agenda` and `/privacidad` with continuous brand feeling.
-Build only the shell needed now.
-
-### C. Header
-
-Desktop:
-- ConSafeDev brand area left;
-- navigation: `Qué resolvemos`, `Trabajo`, `Cómo trabajamos`;
-- CTA: `Hablemos`.
-
-For Build 01, future anchors may remain inert/disabled or be handled safely; do not generate fake sections merely to satisfy links.
-
-Mobile:
-- accessible compact navigation;
-- no giant glass pill;
-- clear focus and touch targets.
-
-### D. Hero
-
-Use approved content exactly.
-
-Headline:
 `Lo complejo puede funcionar simple.`
 
-Supporting:
 `Diseñamos software a medida que conecta procesos, automatiza operaciones y convierte problemas reales de negocio en sistemas que funcionan.`
 
-CTA:
-`Hablemos de lo que necesitas resolver`
+CTA: `Hablemos de lo que necesitas resolver`
 
-Exploration cue:
-`Explora cómo lo hacemos`
+Exploration: `Explora cómo lo hacemos`
 
-Create the visual System Stage containing a controlled fragmented operation.
+Do not build a right-side dashboard panel. Use spatial operational fragments around/beyond the copy. The Hero must pass the Static Frame Test before motion is considered successful.
 
-### E. Living System
+## Living System copy
+1. `Los problemas rara vez empiezan en el software.`
+2. `Primero entendemos qué está ocurriendo.`
+3. `Diseñamos alrededor del problema. No de una plantilla.`
+4. `Después lo convertimos en software que tu equipo puede usar.`
+5. `Un sistema que trabaja como trabaja tu negocio. No al revés.`
 
-The Hero system must visually become the Living System.
+## Required behavior
+- Fragmentation: reveal recognizable operational fragments.
+- Understanding: reduce noise and reveal context/relationships.
+- Architecture: create business/product structure, never infrastructure topology.
+- Product Emergence: existing fragments visibly become software elements. At least three transformations must be semantically traceable.
+- Living Product: restrained input→process→result.
+- Transition: begin resolving Engineering Space into Clarity Space without hard cut.
 
-Required narrative states:
-1. Fragmentation.
-2. Understanding.
-3. Architecture.
-4. Software.
-5. Living system.
+## Composition
+Think depth, layered fragments, negative space, asymmetry, visual focus and editorial typography.
 
-Desktop guide:
-- sticky narrative;
-- approximately 400–450vh;
-- ~12–18 meaningful entities;
-- restrained connection layer;
-- close scroll linkage.
+Do not think grid of nodes, equal cards, system topology or dashboard layout from the beginning.
 
-Mobile guide:
-- separate composition;
-- ~7–9 primary entities;
-- approximately 280–330vh;
-- no hover dependency.
+## Story copy
+No bordered story cards, `FASE`, `01/05`, side stepper, stage badge or product-like progress rail.
 
-Tablet:
-- explicitly designed intermediate layout.
+## Motion
+Use Motion already in project. No Three.js/WebGL. Use transform, opacity, restrained clip/mask and SVG only as supporting behavior. Do not create a general-purpose node graph engine. No scroll hijacking or large spring lag.
 
-### F. Initial Clarity boundary
+## Responsive
+Desktop: spatial/cinematic. Tablet: deliberate intermediate composition. Mobile: separate vertical narrative, fewer/larger fragments, preserve semantic transformations, no hover dependency.
 
-End Build 01 with the beginning/placeholder boundary of the transition into Clarity Space.
-Do not implement `Qué podemos construir` yet.
+## Logo
+Do not redraw, reinterpret or generate ConSafeDev logo. Use existing approved asset as-is and isolate it for later vector replacement.
 
-## Architecture preference
-
-Prefer something conceptually similar to:
-- `SiteShell`
-- `SiteHeader`
-- `HeroLivingExperience`
-- `SystemStage`
-- `ConnectionLayer`
-- `SystemNode`
-- `StoryCopy`
-- `StoryProgress`
-
-Exact naming may differ if repository conventions justify it.
-Avoid a giant single component.
-Keep animation state derivation understandable and deterministic.
-
-## Visual prohibitions
-
-Do not add:
-- neon purple;
-- glowing AI gradients;
-- orb backgrounds;
-- giant glass panels;
-- generic Bento layout;
-- fake code terminal;
-- robot/brain/globe/cube visuals;
-- random particles;
-- technology-logo marquee;
-- invented metrics;
-- stock-office image.
-
-## Motion requirements
-
-Main scene:
-- scroll-linked;
-- no scroll hijacking;
-- no catch-up feeling;
-- no large spring delay.
-
-Use Motion already present in the project unless a documented blocker exists.
-Prioritize transform/opacity/SVG stroke animation.
-Do not add Three.js/WebGL in Build 01.
-
-## Branding assets
-
-Do not generate a new ConSafeDev logo.
-
-If final vector assets are not yet in the repository:
-- use an existing approved company asset if suitable; or
-- create a neutral text/asset placeholder clearly isolated for later replacement.
-
-Do not use AI-generated substitute branding.
-
-## Legacy cleanup for Build 01
-
-The rendered `/` should no longer include the legacy sections after Living System during this prototype gate.
-Legacy source files may remain temporarily unused; do not perform unrelated deletion/refactor work unless necessary.
+## Legacy
+Do not preserve ROI calculator, CEO section, old conversational form, old glass language, coral accents or legacy service-card composition merely because they exist. During this prototype gate `/` should render only Build 01 V2 plus Clarity boundary.
 
 ## Deployment safety
+Do not modify `deploy.sh`, port 3002 assumptions, systemd, Cloudflare topology or Next.js standalone output. Deployment impact must remain `None`.
 
-Absolutely no changes to:
-- `deploy.sh`;
-- port 3002 assumptions;
-- systemd;
-- Cloudflare topology;
-- Next.js standalone output.
+## Build method
+### Pass A — Static composition
+First create Hero and key story-state compositions. Check Hero, Fragmentation, Understanding, Product Emergence and Living Product as static frames. If they look generic, stop and refine before advanced motion.
 
-Do not use stale deployment documentation to alter production.
+### Pass B — Semantic transformations
+Connect states using meaning-changing, visually traceable transformations.
 
-## Quality gate
+### Pass C — Motion polish
+Add continuity, depth response and transition polish.
 
-Execute the checks from `QA_ACCEPTANCE.md`.
-At minimum:
-- lint;
-- production build;
-- responsive inspection;
-- reduced-motion inspection.
+### Pass D — Responsive
+Design tablet/mobile choreography.
 
-If browser/device tooling is unavailable, state exactly which visual checks still require human verification.
+### Pass E — QA
+Execute `QA_ACCEPTANCE.md`.
 
-## Completion response format
+Do not jump directly to animation before static composition is strong.
 
+## Human review
+Before declaring visual implementation ready, provide screenshots requested in QA and a short scroll recording if supported.
+
+## Completion format
 ### Implemented
-Short summary.
-
 ### Files changed
-File → purpose.
-
+### Static frame review
+- Hero
+- Fragmentation
+- Understanding
+- Product Emergence
+- Living Product
+### Semantic transformations implemented
 ### Validation
-- lint:
-- build:
-- responsive:
-- accessibility:
-- reduced motion:
-
+- lint
+- build
+- responsive
+- accessibility
+- reduced motion
 ### Performance considerations
-Short factual notes.
-
 ### Deviations
-List every deviation. If none, say `None`.
-
 ### Deployment impact
-Must be `None` unless work is stopped for explicit approval.
+Expected: `None`

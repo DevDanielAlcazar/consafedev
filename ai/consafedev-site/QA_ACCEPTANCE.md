@@ -1,101 +1,80 @@
-# ConSafeDev — Build 01 Acceptance Criteria
+# ConSafeDev — Build 01 V2 Acceptance Criteria
 
 ## Gate
+Do not continue to later homepage sections until Build 01 V2 is explicitly approved.
 
-Do not continue to later homepage sections until Build 01 is explicitly approved.
+## A. Static Frame Gate
+Pause at Hero, Fragmentation, Understanding, Product Emergence and Living Product. Every frame must look art-directed.
 
-## Functional
+FAIL if any resembles generic SaaS, DevOps/ITSM, network topology, admin dashboard template or random card cluster.
 
-- [ ] Home route loads without runtime error.
-- [ ] Header navigation is usable.
-- [ ] Primary CTA is usable.
-- [ ] Hero copy matches approved copy.
-- [ ] Living System contains all five narrative states.
-- [ ] Hero visual becomes the Living System continuously.
-- [ ] No fictional metrics or legacy claims are present.
-- [ ] No old ROI/form/CEO components appear in the rendered Build 01 prototype.
+## B. Hero
+- [ ] Approved copy exact.
+- [ ] Custom software is clear.
+- [ ] Visual environment is spatial, not a right-side panel.
+- [ ] Operational fragments exist before complete UI.
+- [ ] Teal restrained.
+- [ ] No fake KPI/telemetry.
+- [ ] No stock hero image.
+- [ ] No completed dashboard centerpiece.
 
-## Visual
+## C. Narrative
+- [ ] Fragmentation perceptible.
+- [ ] Understanding shown mainly by reduction/clarification.
+- [ ] Architecture shown as business/product structure, not infrastructure topology.
+- [ ] Product emerges from existing fragments.
+- [ ] Living Product shows input→process→result.
+- [ ] Engineering→Clarity begins without hard cut.
+- [ ] No explicit phase stepper required.
 
-- [ ] Clearly reads as ConSafeDev rather than generic AI/SaaS.
-- [ ] Teal is used semantically and sparingly.
-- [ ] Hero does not rely on stock imagery.
-- [ ] No generic Bento/card wall replaces storytelling.
-- [ ] Dark environment maintains strong text contrast.
-- [ ] Composition has intentional whitespace.
-- [ ] No obvious layout jump at sticky entry/exit.
-- [ ] No hard visual cut between Hero and Living System.
+## D. Transformation Test
+At least three transformations change semantic meaning.
 
-## Motion
+FAIL if most transformation is boxes moving, lines connecting, colors/badges changing.
 
-- [ ] Scroll-linked motion follows user input closely.
+## E. Forbidden patterns
+- [ ] No BUS.
+- [ ] No PORT labels.
+- [ ] No topology map.
+- [ ] No observability language.
+- [ ] No phase badges.
+- [ ] No numbered story stepper.
+- [ ] No fake telemetry.
+- [ ] No invented metrics.
+- [ ] No giant glass panels.
+- [ ] No generic Bento replacement.
+- [ ] No cyberpunk/neon purple.
+- [ ] No AI brain/robot/globe/cube.
+- [ ] No random particle field.
+
+## F. Motion
+- [ ] Closely linked to user scroll.
 - [ ] No scroll hijacking.
-- [ ] No visible catch-up lag on the main scene.
-- [ ] No random infinite motion competing with reading.
-- [ ] No jarring snaps between story states.
-- [ ] Pointer enhancement is optional, never required.
-- [ ] Reduced-motion mode remains complete and polished.
+- [ ] No catch-up lag.
+- [ ] Hero motion restrained.
+- [ ] Meaningful fragments visually traceable.
+- [ ] No hard timeline snaps.
+- [ ] No sticky entry/exit jump.
+- [ ] Reduced motion complete.
 
-## Responsive test matrix
+## G. Responsive
+Inspect 375×812, 390×844, 768×1024, 1024×768, 1366×768, 1440×900, 1920×1080 and one viewport below 360px.
 
-- [ ] 375×812 or similar phone.
-- [ ] 390×844 or similar modern phone.
-- [ ] 768×1024 tablet portrait.
-- [ ] 1024×768 tablet/compact landscape.
-- [ ] 1366×768 laptop.
-- [ ] 1440×900 desktop.
-- [ ] 1920×1080 desktop.
-- [ ] one viewport below 360px for overflow failure.
+Mobile must be recomposed, not compressed desktop.
 
-## Input methods
+## H. Accessibility
+Semantic headings, visible focus, keyboard CTA, decorative graphics hidden appropriately, meaning not trapped in graphics, strong contrast, motion not gating content, reduced motion honored.
 
-- [ ] Mouse wheel.
-- [ ] Trackpad.
-- [ ] Touch.
-- [ ] Keyboard.
-- [ ] Reduced-motion preference.
+## I. Performance
+No obvious ordinary-scroll frame drops, long stalls, layout thrashing, huge blur layers or unnecessary video/WebGL payload.
 
-## Accessibility
+Production targets remain LCP≤2.5s, INP≤200ms, CLS≤0.1 but must not be claimed until measured.
 
-- [ ] Semantic heading hierarchy.
-- [ ] Visible keyboard focus.
-- [ ] CTA reachable by keyboard.
-- [ ] Decorative SVG hidden appropriately from assistive technology.
-- [ ] Meaningful system text is not trapped only inside inaccessible graphics.
-- [ ] Contrast remains readable.
-- [ ] Motion does not gate content.
+## J. Engineering
+Run `npm run lint` and `npm run build`. Use `npm ci` if clean-environment validation is required. Do not suppress TypeScript errors or upgrade dependencies without authorization.
 
-## Performance
+## K. Human review packet
+Provide screenshots of Hero, Fragmentation, Understanding, Product Emergence and Living Product on desktop, plus Hero and Product Emergence on mobile. Provide a short scroll recording if supported.
 
-Prototype target:
-- no obvious frame drops during ordinary scrolling on a current mid-range device;
-- no long visual stalls;
-- no repeated layout thrashing;
-- no huge blur layers;
-- no unnecessary video/WebGL payload.
-
-Production targets to protect:
-- LCP ≤ 2.5s
-- INP ≤ 200ms
-- CLS ≤ 0.1
-
-Do not claim these values until measured.
-
-## Engineering
-
-Run and report:
-- [ ] `npm run lint`
-- [ ] `npm run build`
-
-Use `npm ci` for clean validation when appropriate.
-Do not suppress new TypeScript errors.
-Do not upgrade dependencies without authorization.
-
-## Completion report
-
-Must state:
-- files changed;
-- test results;
-- known deviations;
-- unresolved issues;
-- deployment impact.
+## L. Completion report
+State files changed, test results, deviations, unresolved issues and deployment impact. Expected deployment impact: **None**.

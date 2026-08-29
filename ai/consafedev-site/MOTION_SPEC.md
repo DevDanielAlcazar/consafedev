@@ -1,116 +1,59 @@
-# ConSafeDev — Motion Specification V1
+# ConSafeDev — Motion Specification V2
 
 ## Motion principle
+Motion changes meaning. It exists for discovery, context, structure, transformation and operation.
 
-Movement communicates system behavior.
-
-Vocabulary:
-- **Assemble** — separated elements find structure.
-- **Connect** — relationships become active.
-- **Resolve** — unnecessary complexity disappears.
-- **Flow** — information/process moves through the system.
-- **Reveal** — information appears as a consequence.
-- **Respond** — UI acknowledges user presence or action.
+## Vocabulary
+- Drift — subtle spatial life before meaning.
+- Focus — meaningful fragment gains clarity while noise recedes.
+- Associate — separate fragments reveal relationship.
+- Consolidate — scattered information becomes coherent.
+- Assemble — fragments become structured product behavior.
+- Transform — operational fragment visibly becomes software element.
+- Flow — information/action moves through a working system.
+- Resolve — complexity exits and Clarity Space emerges.
 
 ## Character
+Exact, elegant, continuous, calm and deliberate. Never bouncy, random, overloaded or laggy relative to scroll.
 
-Motion must feel controlled, precise, continuous and intentional.
+## Implementation
+Prefer DOM, SVG, CSS transforms and Motion. Three.js/WebGL is not allowed in Build 01 V2 unless separately approved.
 
-Never bouncy, gelatinous, random or decorative for its own sake.
+Do not build around a generic graph engine. Do not start from nodes+edges. Start from semantic fragments in `SCENE_DIRECTION_V2.md`. Connections are supporting behavior, not the product.
 
-## Primary implementation approach
+Prefer transform, opacity, restrained clip-path/masks and SVG paths. Avoid continuous width/height/top/left, large blur/filter animation and paint-heavy full-screen effects.
 
-Prefer:
-- DOM;
-- SVG;
-- CSS transforms;
-- Motion;
-- scroll-linked transforms.
+## Scroll
+No scroll hijacking. Main scene tracks real scroll closely. No spring catch-up. When scrolling stops, story should settle immediately.
 
-Use a single principal SVG connection layer when practical.
+Approximate desktop sticky narrative: 380–460vh. Do not make hard jumps between beats.
 
-Use WebGL/Three.js only if explicitly approved after prototype evidence shows a material experiential gain.
+## Key transformation requirement
+At least three fragment→product transformations must be visually traceable and reuse the same visual entities. Do not replace the scene with unrelated UI.
 
-## Performance-friendly properties
+## Hero
+Initial motion is nearly subconscious: slow drift, tiny depth, restrained live trace, subtle focus. Never compete with headline readability.
 
-Prefer:
-- `transform`;
-- `opacity`;
-- SVG stroke progression;
-- restrained clip-path / masks.
+## Understanding
+Prefer subtractive animation: noise recedes, meaningful fragments sharpen, relationships become visible. Do not add decorative objects.
 
-Avoid continuous animation of layout dimensions, `top/left` when transform can be used, large blur/filter areas and paint-heavy effects.
+## Architecture
+Use alignment and relationship, not topology. Teal activates progressively as meaning becomes clear.
 
-## Scroll behavior
+## Product emergence
+Strongest transformation. Use shared transforms, clipping, resizing/reframing and consolidation so the user can track an operational fragment becoming software.
 
-No scroll hijacking.
+## Living product
+Activity demonstrates input → process → result with few simultaneous events. No fake real-time telemetry.
 
-The narrative must remain tied closely to actual scroll position.
-Avoid large spring lag on the main story progress.
-When the user stops scrolling, the primary scene should feel stopped.
+## Engineering → Clarity
+Transform existing elements through line continuation, spatial flattening and dark→light resolution. No hard flash.
 
-## Desktop Living System
+## Mobile
+Separate choreography; ~260–330vh guide; larger fragments; fewer concurrent objects; vertical composition; no hover dependencies.
 
-Guide:
-- scene wrapper: 400–450vh;
-- sticky stage: approximately 100svh;
-- 0–18% Fragmentation;
-- 18–38% Understanding;
-- 38–62% Architecture;
-- 62–82% Software;
-- 82–100% Living System.
-
-These are storyboard guides; transitions must interpolate continuously.
-
-## Mobile Living System
-
-- Separate choreography.
-- Approximate narrative height: 280–330vh.
-- 7–9 primary entities.
-- No hover-dependent behavior.
-- Preserve story, simplify geometry.
-- Avoid aggressive parallax.
-
-## Tablet
-
-Must have a deliberate intermediate scene layout.
-
-## Timing guidelines
-
-Microinteraction: 140–220ms  
-State response: 220–360ms  
-Major reveal: 450–700ms
-
-Preferred easing for discrete transitions:
-`cubic-bezier(0.22, 1, 0.36, 1)`
-
-## Hero → Living System continuity
-
-The visual system shown in Hero must become the Living System.
-Do not mount a visually unrelated replacement after the Hero.
-
-## Engineering → Clarity transition
-
-Build 01 should establish the beginning of this transition:
-- active teal relationships may become structural editorial lines;
-- deep background progressively resolves toward clarity;
-- no hard white cut.
+## Timing
+Micro: 140–220ms. Discrete state: 220–360ms. Major reveal: 450–700ms. Preferred easing: `cubic-bezier(0.22, 1, 0.36, 1)`.
 
 ## Reduced motion
-
-Respect `prefers-reduced-motion: reduce`.
-
-Reduced motion must preserve:
-- copy;
-- hierarchy;
-- progression;
-- a polished premium result.
-
-Remove unnecessary parallax/movement and favor discrete state changes/opacity.
-
-## Interaction
-
-Desktop nodes may respond subtly to pointer proximity/hover.
-No custom global cursor.
-No interaction is required to understand the story.
-Keyboard and touch users receive the complete narrative.
+Preserve every story beat and semantic ordering. Replace continuous depth/parallax with discrete reveals, opacity and simple transforms. Reduced motion remains premium.

@@ -1,88 +1,39 @@
-# SKILL — ConSafeDev Web Implementation
+# SKILL — ConSafeDev Web Implementation V2
 
 ## Role
-
-You are an implementation agent.
-
-You are **not** the product owner, brand strategist, UX architect, copywriter or creative director.
-
-Your responsibility is to implement the approved ConSafeDev specification faithfully, with production-quality engineering, performance and accessibility.
+You are an implementation agent. You are **not** the product owner, brand strategist, UX architect, copywriter or creative director.
 
 ## Mandatory behavior
+Before changing code: inspect the repository; read all referenced documents; read `SCENE_DIRECTION_V2.md` completely before Hero/Living System work; preserve deployment topology; never simplify approved UX for implementation convenience.
 
-Before changing code:
-
-1. Inspect the repository.
-2. Read all documents referenced by this SKILL that apply to the task.
-3. Identify the smallest safe implementation scope.
-4. Preserve deployment topology and production assumptions.
-5. Do not reinterpret approved UX to make coding easier.
-
-If specification and implementation convenience conflict:
-- preserve the specification;
-- explain the engineering constraint;
-- do not silently simplify the experience.
+If specification and implementation convenience conflict, preserve the specification and report the constraint.
 
 ## Source hierarchy
+1. Current implementation prompt
+2. `SCENE_DIRECTION_V2.md`
+3. `EXPERIENCE_CONTRACT.md`
+4. `DEPLOYMENT_GUARDRAILS.md`
+5. `DESIGN_TOKENS.md`
+6. `MOTION_SPEC.md`
+7. `CONTENT_RULES.md`
+8. `QA_ACCEPTANCE.md`
+9. Existing code
 
-In case of conflict, use this order:
-
-1. Explicit instruction in the current implementation prompt.
-2. `EXPERIENCE_CONTRACT.md`
-3. `DEPLOYMENT_GUARDRAILS.md`
-4. `DESIGN_TOKENS.md`
-5. `MOTION_SPEC.md`
-6. `CONTENT_RULES.md`
-7. `QA_ACCEPTANCE.md`
-8. Existing application code.
-
-Existing visual/code patterns from the old landing are **not** brand precedent.
+Existing visual patterns from the old landing are not brand precedent.
 
 ## Non-negotiables
+DO NOT modify `deploy.sh`, port `3002`, localhost binding assumptions, standalone output, Cloudflare/systemd topology, dependency versions unless authorized, approved copy, brand assets or approved UX.
 
-DO NOT:
-- modify `deploy.sh`;
-- change production port `3002`;
-- change localhost binding assumptions;
-- remove `output: 'standalone'`;
-- redesign the Cloudflare/systemd deployment topology;
-- upgrade Next.js, React, Motion or other dependencies unless explicitly authorized;
-- add a dependency without a concrete engineering need;
-- invent copy;
-- invent metrics;
-- invent client relationships;
-- generate substitute ConSafeDev logos;
-- add generic AI/SaaS visual tropes;
-- replace approved scrollytelling with cards or ordinary fade-in sections;
-- use stock photography as the principal hero device;
-- introduce scroll hijacking;
-- make desktop interaction required for mobile usability;
-- sacrifice keyboard navigation or reduced-motion support;
-- declare completion without executing acceptance checks.
+DO NOT invent metrics, client relationships or telemetry.
 
-## Engineering priorities
+DO NOT represent Living System as a topology map, DevOps console, observability dashboard or network diagram.
 
-1. Visual fidelity to approved experience.
-2. Smooth interaction and stable layout.
-3. Accessibility.
-4. Runtime performance.
-5. Maintainability.
-6. Minimal dependencies.
-7. Clean responsive behavior.
+DO NOT use phase steppers, numbered progress rails, BUS/PORT labels, fake telemetry, fictional KPIs, generic AI/SaaS tropes, scroll hijacking, stock hero photography, or generic card grids as substitutes for scrollytelling.
+
+## Key conceptual rule
+**Do not show software first. Show operational reality first, then let software emerge from it.**
+
+The transformation must be semantic, not merely positional. Moving the same box to another coordinate is not sufficient.
 
 ## Completion report
-
-Every implementation response must include:
-
-- Files changed.
-- Purpose of each changed file.
-- Dependencies added/removed, if any.
-- Build result.
-- Lint result.
-- Responsive checks performed.
-- Accessibility checks performed.
-- Motion/reduced-motion checks performed.
-- Known deviations from specification.
-- Any deployment-impacting change — expected answer for Build 01 is **none**.
-
-Never hide a deviation.
+Report files changed, purpose, dependencies, build, lint, responsive checks, accessibility, reduced motion, deviations and deployment impact. Never hide a deviation.
