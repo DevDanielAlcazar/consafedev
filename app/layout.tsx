@@ -1,10 +1,10 @@
 import type {Metadata} from 'next';
-import { Space_Grotesk, Inter } from 'next/font/google';
-import './globals.css'; // Global styles
+import { Instrument_Sans, Inter, JetBrains_Mono } from 'next/font/google';
+import './globals.css';
 
-const spaceGrotesk = Space_Grotesk({
+const instrumentSans = Instrument_Sans({
   subsets: ['latin'],
-  variable: '--font-space',
+  variable: '--font-instrument',
   display: 'swap',
 });
 
@@ -14,30 +14,28 @@ const inter = Inter({
   display: 'swap',
 });
 
+const jetBrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-jetbrains',
+  display: 'swap',
+});
+
 export const metadata: Metadata = {
-  title: 'ConSafeDev | Desarrollo de Software en León, Gto',
-  description: 'Boutique de Ingeniería Universal en León, Gto. Automatización Inteligente para Empresas, desarrollo a medida y arquitectura de alto rendimiento.',
-  keywords: ['Desarrollo de Software en León', 'Automatización Inteligente para Empresas', 'Agencia de Software B2B', 'Next.js', 'Arquitectura de Software'],
+  metadataBase: new URL('https://consafedev.qzz.io'),
+  title: 'ConSafeDev | Software a medida',
+  description: 'Software a medida que conecta procesos, automatiza operaciones y convierte problemas reales de negocio en sistemas que funcionan.',
   openGraph: {
-    title: 'ConSafeDev | Desarrollo de Software en León, Gto',
-    description: 'Boutique de Ingeniería Universal especializada en desarrollo a medida y automatización inteligente.',
-    url: 'https://consafedev.com',
+    title: 'ConSafeDev | Software a medida',
+    description: 'Software a medida que conecta procesos, automatiza operaciones y convierte problemas reales de negocio en sistemas que funcionan.',
+    url: 'https://consafedev.qzz.io',
     siteName: 'ConSafeDev',
-    images: [
-      {
-        url: 'https://consafedev.com/og-image.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'ConSafeDev - Ingeniería de Software Universal',
-      },
-    ],
     locale: 'es_MX',
     type: 'website',
   },
   twitter: {
-    card: 'summary_large_image',
-    title: 'ConSafeDev | Desarrollo de Software en León, Gto',
-    description: 'Automatización Inteligente para Empresas y arquitectura de alto rendimiento.',
+    card: 'summary',
+    title: 'ConSafeDev | Software a medida',
+    description: 'Software a medida para operaciones reales.',
   },
 };
 
@@ -45,27 +43,13 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "ProfessionalService",
   "name": "ConSafeDev",
-  "image": "https://consafedev.com/logo.png",
-  "description": "Boutique de Ingeniería Universal especializada en desarrollo de software a medida y automatización inteligente.",
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "León",
-    "addressRegion": "Guanajuato",
-    "addressCountry": "MX"
-  },
-  "founder": {
-    "@type": "Person",
-    "name": "Jesús Daniel Nava Alcázar",
-    "jobTitle": "CEO & Maestro Arquitecto"
-  },
-  "url": "https://consafedev.com",
-  "telephone": "+524770000000",
-  "priceRange": "$$$"
+  "description": "Software a medida que conecta procesos, automatiza operaciones y convierte problemas reales de negocio en sistemas que funcionan.",
+  "url": "https://consafedev.qzz.io"
 };
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
-    <html lang="es" className={`${spaceGrotesk.variable} ${inter.variable}`}>
+    <html lang="es" className={`${instrumentSans.variable} ${inter.variable} ${jetBrainsMono.variable}`}>
       <head>
         <script
           type="application/ld+json"

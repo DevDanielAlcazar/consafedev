@@ -1,21 +1,11 @@
 import { Navbar } from "@/components/navbar";
-import { Hero } from "@/components/hero";
-import { BentoServices } from "@/components/bento-services";
-import { Testimonials } from "@/components/testimonials";
-import { RoiCalculator } from "@/components/roi-calculator";
-import { ConversationalForm } from "@/components/conversational-form";
-import { CeoFooter } from "@/components/ceo-footer";
+import { SpatialPrototype } from "@/components/build-one/spatial-prototype";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-navy-dark selection:bg-teal/30">
+    <main>
       <Navbar />
-      <Hero />
-      <BentoServices />
-      <Testimonials />
-      <RoiCalculator />
-      <ConversationalForm />
-      <CeoFooter />
+      <SpatialPrototype />
     </main>
   );
 }
