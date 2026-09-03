@@ -16,6 +16,12 @@ type ActorSpec = {
   depth: 'near' | 'mid' | 'far';
 };
 
+type ActorTarget = { position: Point3; rotation: Point3; scale: number };
+
+const SETTLE_START = 0.68;
+const RESOLUTION_START = 0.82;
+const RESOLUTION_END = 0.98;
+
 // These six actors stay in the scene for the whole V4A sequence. Their meaning
 // comes from their restrained physical cues, not from a dashboard layout.
 const ACTORS: ActorSpec[] = [
@@ -42,7 +48,7 @@ const STRUCTURE_TARGETS: Record<ActorId, { position: Point3; rotation: Point3 }>
 // Product positions are embedded destinations, not a new UI layout. The
 // offsets keep the three relationships readable while the common material
 // gives them one operational surface.
-const PRODUCT_TARGETS: Record<ActorId, { position: Point3; rotation: Point3; scale: number }> = {
+const PRODUCT_TARGETS: Record<ActorId, ActorTarget> = {
   solicitud: { position: [0.18, 0.78, 0.18], rotation: [0.015, 0.01, -0.012], scale: 0.96 },
   documento: { position: [2.02, 0.76, -0.18], rotation: [-0.01, 0.04, 0.012], scale: 0.78 },
   responsable: { position: [0.05, -0.2, -0.04], rotation: [0.01, -0.015, -0.006], scale: 0.86 },
@@ -51,15 +57,35 @@ const PRODUCT_TARGETS: Record<ActorId, { position: Point3; rotation: Point3; sca
   accion: { position: [0.52, -1.02, 0.12], rotation: [0.01, 0.015, -0.012], scale: 0.9 },
 };
 
+// V4H finishes the existing V4G relationships in place. These are not a new
+// layout: they are the final coordinates for the same six persistent actors.
+const RESOLUTION_TARGETS: Record<ActorId, ActorTarget> = {
+  solicitud: { position: [-0.44, 0.78, 0.18], rotation: [0.012, 0.008, -0.01], scale: 0.96 },
+  documento: { position: [1.96, 0.77, -0.2], rotation: [-0.008, 0.035, 0.01], scale: 0.78 },
+  responsable: { position: [-0.22, -0.2, -0.04], rotation: [0.008, -0.012, -0.004], scale: 0.86 },
+  fecha: { position: [2.36, -0.2, -0.08], rotation: [0.008, -0.008, 0.008], scale: 0.86 },
+  estado: { position: [2.22, -1.04, -0.02], rotation: [0.008, 0.008, -0.01], scale: 0.84 },
+  accion: { position: [0.48, -1.04, 0.12], rotation: [0.008, 0.012, -0.01], scale: 0.9 },
+};
+
 // Mobile is recomposed as one vertical instrument. The semantic roles stay the
 // same, but their shared context is readable without cropping the desktop stage.
-const PRODUCT_MOBILE_TARGETS: Record<ActorId, { position: Point3; rotation: Point3; scale: number }> = {
+const PRODUCT_MOBILE_TARGETS: Record<ActorId, ActorTarget> = {
   solicitud: { position: [-0.3, 1.02, 0.18], rotation: [0.015, 0.01, -0.012], scale: 0.82 },
   documento: { position: [0.78, 1.0, -0.22], rotation: [-0.01, 0.04, 0.012], scale: 0.68 },
   responsable: { position: [-0.38, -0.08, -0.04], rotation: [0.01, -0.015, -0.006], scale: 0.76 },
   fecha: { position: [0.7, -0.08, -0.1], rotation: [0.01, -0.01, 0.01], scale: 0.76 },
   estado: { position: [0.62, -1.17, 0.02], rotation: [0.01, 0.01, -0.012], scale: 0.76 },
   accion: { position: [-0.22, -1.17, 0.1], rotation: [0.01, 0.015, -0.012], scale: 0.78 },
+};
+
+const RESOLUTION_MOBILE_TARGETS: Record<ActorId, ActorTarget> = {
+  solicitud: { position: [-0.38, 1.02, 0.18], rotation: [0.012, 0.008, -0.01], scale: 0.82 },
+  documento: { position: [0.72, 1.0, -0.22], rotation: [-0.008, 0.035, 0.01], scale: 0.68 },
+  responsable: { position: [-0.38, -0.08, -0.04], rotation: [0.008, -0.012, -0.004], scale: 0.76 },
+  fecha: { position: [0.7, -0.08, -0.1], rotation: [0.008, -0.008, 0.008], scale: 0.76 },
+  estado: { position: [0.62, -1.17, 0.02], rotation: [0.008, 0.008, -0.01], scale: 0.76 },
+  accion: { position: [-0.22, -1.17, 0.1], rotation: [0.008, 0.012, -0.01], scale: 0.78 },
 };
 
 // V4F.1 keeps the mobile recognition phase inside the viewport, then locks
@@ -86,8 +112,32 @@ function lerp(a: number, b: number, amount: number) {
   return a + (b - a) * amount;
 }
 
+function settleAmount(progress: number) {
+  return smoothStep((progress - SETTLE_START) / (RESOLUTION_START - SETTLE_START));
+}
+
+function resolutionAmount(progress: number) {
+  return smoothStep((progress - RESOLUTION_START) / (RESOLUTION_END - RESOLUTION_START));
+}
+
+function blendTarget(base: ActorTarget, resolved: ActorTarget, amount: number): ActorTarget {
+  return {
+    position: [
+      lerp(base.position[0], resolved.position[0], amount),
+      lerp(base.position[1], resolved.position[1], amount),
+      lerp(base.position[2], resolved.position[2], amount),
+    ],
+    rotation: [
+      lerp(base.rotation[0], resolved.rotation[0], amount),
+      lerp(base.rotation[1], resolved.rotation[1], amount),
+      lerp(base.rotation[2], resolved.rotation[2], amount),
+    ],
+    scale: lerp(base.scale, resolved.scale, amount),
+  };
+}
+
 function ActorSurface({ id, referenceReveal, productMode, livingState, clarityMode }: { id: ActorId; referenceReveal: number; productMode: boolean; livingState: 'focus' | 'evidence' | 'metadata' | 'ready' | 'state' | null; clarityMode: boolean }) {
-  const surfaceClass = `${productMode ? ' v4c-actor' : ''}${clarityMode && productMode ? ' v4g-actor' : ''}${livingState ? ` v4c-actor--living-${livingState}` : ''}`;
+  const surfaceClass = `${productMode ? ' v4c-actor' : ''}${clarityMode && productMode ? ' v4g-actor v4h-actor' : ''}${livingState ? ` v4c-actor--living-${livingState}` : ''}`;
 
   if (id === 'solicitud') {
     return (
@@ -162,6 +212,8 @@ function Actor({ spec, progress, reducedMotion, mobile, productMode = false, nar
   const livingReady = productMode || narrativeMode ? smoothStep((livingTimeline - 0.84) / 0.12) : 0;
   const livingState = productMode || narrativeMode ? smoothStep((livingTimeline - 0.88) / 0.08) : 0;
   const clarityAmount = clarityMode ? smoothStep((progress - 0.72) / 0.28) : 0;
+  const settleProgress = productMode || narrativeMode ? settleAmount(progress) : 0;
+  const resolutionProgress = productMode || narrativeMode ? resolutionAmount(progress) : 0;
   const productLanding = productMode
     ? spec.id === 'solicitud' || spec.id === 'documento'
       ? contextLanding
@@ -256,8 +308,11 @@ function Actor({ spec, progress, reducedMotion, mobile, productMode = false, nar
         lerp(spec.rotation[2], STRUCTURE_TARGETS[spec.id].rotation[2], recognition),
       ];
       const destination = mobile ? PRODUCT_MOBILE_TARGETS[spec.id] : PRODUCT_TARGETS[spec.id];
-      const pointerX = reducedMotion || mobile ? 0 : state.pointer.x;
-      const pointerY = reducedMotion || mobile ? 0 : state.pointer.y;
+      const resolvedDestination = mobile ? RESOLUTION_MOBILE_TARGETS[spec.id] : RESOLUTION_TARGETS[spec.id];
+      const finalDestination = blendTarget(destination, resolvedDestination, resolutionProgress);
+      const pointerDamping = lerp(1, 0.62, settleProgress);
+      const pointerX = reducedMotion || mobile ? 0 : state.pointer.x * pointerDamping;
+      const pointerY = reducedMotion || mobile ? 0 : state.pointer.y * pointerDamping;
       const proximity = (x: number, y: number) => clamp01(1 - Math.hypot(pointerX - x, pointerY - y) / 1.2);
       const requestPointer = proximity(-0.45, 0.2);
       const documentPointer = proximity(0.42, 0.18);
@@ -272,9 +327,9 @@ function Actor({ spec, progress, reducedMotion, mobile, productMode = false, nar
       const pointerDepth = spec.id === 'solicitud' ? 0.026 : spec.id === 'documento' ? 0.014 : spec.id === 'accion' ? 0.021 : 0;
       const pointerScale = spec.id === 'solicitud' ? 0.006 : spec.id === 'documento' ? 0.003 : spec.id === 'accion' ? 0.005 : 0;
       const alignedPosition: Point3 = [
-        lerp(sourcePosition[0], destination.position[0], narrativeRoleConvergence) + pointerX * pointerResponse * (spec.id === 'documento' ? 0.009 : 0.012),
-        lerp(sourcePosition[1], destination.position[1], narrativeRoleConvergence) + pointerY * pointerResponse * (spec.id === 'documento' ? 0.009 : 0.012),
-        lerp(sourcePosition[2], destination.position[2], narrativeRoleConvergence) + pointerResponse * pointerDepth,
+        lerp(sourcePosition[0], finalDestination.position[0], narrativeRoleConvergence) + pointerX * pointerResponse * (spec.id === 'documento' ? 0.009 : 0.012),
+        lerp(sourcePosition[1], finalDestination.position[1], narrativeRoleConvergence) + pointerY * pointerResponse * (spec.id === 'documento' ? 0.009 : 0.012),
+        lerp(sourcePosition[2], finalDestination.position[2], narrativeRoleConvergence) + pointerResponse * pointerDepth,
       ];
       const roleResponse = spec.id === 'solicitud'
         ? livingFocus
@@ -296,18 +351,21 @@ function Actor({ spec, progress, reducedMotion, mobile, productMode = false, nar
       group.position.set(alignedPosition[0], alignedPosition[1], lerp(alignedPosition[2], mobile ? 0.018 : 0.04, depthCollapse));
       group.position.y += spec.id === 'solicitud' ? roleResponse * 0.022 : spec.id === 'documento' ? roleResponse * 0.016 : spec.id === 'accion' ? roleResponse * 0.012 : 0;
       group.position.z += spec.id === 'solicitud' ? roleResponse * 0.028 : spec.id === 'documento' ? roleResponse * 0.02 : spec.id === 'accion' ? roleResponse * 0.018 : 0;
-      group.rotation.x = lerp(recognitionRotation[0], destination.rotation[0], narrativeRoleConvergence);
-      group.rotation.y = lerp(recognitionRotation[1], destination.rotation[1], narrativeRoleConvergence);
-      group.rotation.z = lerp(recognitionRotation[2], destination.rotation[2], narrativeRoleConvergence);
-      const scale = lerp(1, destination.scale, narrativeRoleConvergence);
+      group.rotation.x = lerp(recognitionRotation[0], finalDestination.rotation[0], narrativeRoleConvergence);
+      group.rotation.y = lerp(recognitionRotation[1], finalDestination.rotation[1], narrativeRoleConvergence);
+      group.rotation.z = lerp(recognitionRotation[2], finalDestination.rotation[2], narrativeRoleConvergence);
+      const scale = lerp(1, finalDestination.scale, narrativeRoleConvergence);
       group.scale.setScalar(scale * (1 + roleResponse * 0.008 + pointerResponse * pointerScale));
       return;
     }
     if (productMode) {
       const source = STRUCTURE_TARGETS[spec.id];
       const destination = mobile ? PRODUCT_MOBILE_TARGETS[spec.id] : PRODUCT_TARGETS[spec.id];
-      const pointerX = reducedMotion || mobile ? 0 : state.pointer.x;
-      const pointerY = reducedMotion || mobile ? 0 : state.pointer.y;
+      const resolvedDestination = mobile ? RESOLUTION_MOBILE_TARGETS[spec.id] : RESOLUTION_TARGETS[spec.id];
+      const finalDestination = blendTarget(destination, resolvedDestination, resolutionProgress);
+      const pointerDamping = lerp(1, 0.62, settleProgress);
+      const pointerX = reducedMotion || mobile ? 0 : state.pointer.x * pointerDamping;
+      const pointerY = reducedMotion || mobile ? 0 : state.pointer.y * pointerDamping;
       const proximity = (x: number, y: number) => clamp01(1 - Math.hypot(pointerX - x, pointerY - y) / 1.2);
       const requestPointer = proximity(-0.45, 0.2);
       const documentPointer = proximity(0.42, 0.18);
@@ -334,9 +392,9 @@ function Actor({ spec, progress, reducedMotion, mobile, productMode = false, nar
             ? 0.005
             : 0;
       const alignedPosition: Point3 = [
-        lerp(source.position[0], destination.position[0], productLanding) + pointerX * pointerResponse * (spec.id === 'documento' ? 0.009 : 0.012),
-        lerp(source.position[1], destination.position[1], productLanding) + pointerY * pointerResponse * (spec.id === 'documento' ? 0.009 : 0.012),
-        lerp(source.position[2], destination.position[2], productLanding * 0.82 + productAlignment * 0.18) + pointerResponse * pointerDepth,
+        lerp(source.position[0], finalDestination.position[0], productLanding) + pointerX * pointerResponse * (spec.id === 'documento' ? 0.009 : 0.012),
+        lerp(source.position[1], finalDestination.position[1], productLanding) + pointerY * pointerResponse * (spec.id === 'documento' ? 0.009 : 0.012),
+        lerp(source.position[2], finalDestination.position[2], productLanding * 0.82 + productAlignment * 0.18) + pointerResponse * pointerDepth,
       ];
       const roleResponse = spec.id === 'solicitud'
         ? livingFocus
@@ -363,10 +421,10 @@ function Actor({ spec, progress, reducedMotion, mobile, productMode = false, nar
           : spec.id === 'accion'
             ? roleResponse * 0.018
             : 0;
-      group.rotation.x = lerp(source.rotation[0], destination.rotation[0], productLanding);
-      group.rotation.y = lerp(source.rotation[1], destination.rotation[1], productLanding);
-      group.rotation.z = lerp(source.rotation[2], destination.rotation[2], productLanding);
-      const scale = lerp(1, destination.scale, productAlignment);
+      group.rotation.x = lerp(source.rotation[0], finalDestination.rotation[0], productLanding);
+      group.rotation.y = lerp(source.rotation[1], finalDestination.rotation[1], productLanding);
+      group.rotation.z = lerp(source.rotation[2], finalDestination.rotation[2], productLanding);
+      const scale = lerp(1, finalDestination.scale, productAlignment);
       group.scale.setScalar(scale * (1 + roleResponse * 0.008 + pointerResponse * pointerScale));
       return;
     }
@@ -422,11 +480,13 @@ function Actor({ spec, progress, reducedMotion, mobile, productMode = false, nar
     opacity: renderedOpacity,
     '--v4e-state-progress': livingProgress,
     '--v4g-resolution': clarityAmount,
+    '--v4h-settle': settleProgress,
+    '--v4h-resolution': resolutionProgress,
     '--v4g-ink': `rgba(${Math.round(lerp(218, 16, clarityAmount))}, ${Math.round(lerp(236, 37, clarityAmount))}, ${Math.round(lerp(231, 44, clarityAmount))}, 0.88)`,
     '--v4g-label': `rgba(${Math.round(lerp(218, 39, clarityAmount))}, ${Math.round(lerp(236, 63, clarityAmount))}, ${Math.round(lerp(231, 64, clarityAmount))}, 0.86)`,
     '--v4g-line': `rgba(${Math.round(lerp(218, 44, clarityAmount))}, ${Math.round(lerp(236, 69, clarityAmount))}, ${Math.round(lerp(231, 68, clarityAmount))}, 0.74)`,
     '--v4g-ref': `rgba(${Math.round(lerp(201, 84, clarityAmount))}, ${Math.round(lerp(226, 107, clarityAmount))}, ${Math.round(lerp(220, 96, clarityAmount))}, 0.9)`,
-  } as CSSProperties), [clarityAmount, livingProgress, renderedOpacity]);
+  } as CSSProperties), [clarityAmount, livingProgress, renderedOpacity, resolutionProgress, settleProgress]);
 
   return (
     <group ref={groupRef} position={initialPosition} rotation={initialRotation}>
@@ -505,7 +565,7 @@ function StructureAccent({ progress, reducedMotion, clarityProgress = 0 }: { pro
   );
 }
 
-function ProductSurface({ progress, reducedMotion, mobile, narrativeMode = false, clarityProgress = 0 }: { progress: number; reducedMotion: boolean; mobile: boolean; narrativeMode?: boolean; clarityProgress?: number }) {
+function ProductSurface({ progress, reducedMotion, mobile, narrativeMode = false, clarityProgress = 0, resolutionProgress = 0 }: { progress: number; reducedMotion: boolean; mobile: boolean; narrativeMode?: boolean; clarityProgress?: number; resolutionProgress?: number }) {
   const groupRef = useRef<THREE.Group>(null);
   const clarityAmount = clarityProgress;
   const rootReveal = narrativeMode ? smoothStep((progress - 0.62) / 0.2) : smoothStep((progress - 0.08) / 0.72);
@@ -522,9 +582,10 @@ function ProductSurface({ progress, reducedMotion, mobile, narrativeMode = false
   const edgeOpacity = reducedMotion
     ? (narrativeMode ? (progress > 0.62 ? 0.46 : 0.035) : progress > 0.28 ? 0.46 : 0.035)
     : lerp(0.035, 0.46, edgeReveal);
-  const quietEdgeOpacity = edgeOpacity * lerp(1, 0.12, clarityAmount);
+  const quietEdgeOpacity = edgeOpacity * lerp(1, 0.12, clarityAmount) * lerp(1, 0.72, resolutionProgress);
   const bridgeLength = mobile ? lerp(0.14, 1.82, clarityAmount) : lerp(0.16, 3.15, clarityAmount);
-  const bridgeOpacity = lerp(0, 0.82, clarityAmount);
+  const bridgeOpacity = lerp(0, 0.82, clarityAmount) * lerp(1, 1.12, resolutionProgress);
+  const rootPresence = lerp(1, 1.14, resolutionProgress);
   const rootColor = useMemo(() => new THREE.Color('#5f817b').lerp(new THREE.Color('#d5e0da'), clarityAmount), [clarityAmount]);
 
   useFrame(() => {
@@ -576,7 +637,7 @@ function ProductSurface({ progress, reducedMotion, mobile, narrativeMode = false
     <group ref={groupRef} position={mobile ? [0, 0.02, -0.34] : [0.15, 0.02, -0.34]} rotation={[0.02, 0.07, -0.018]} scale={narrativeMode ? [1, 1, 1] : [lerp(0.9, 1, rootReveal), lerp(0.9, 1, rootReveal), 1]}>
       <mesh position={rootPosition}>
         <planeGeometry args={rootSize} />
-        <meshBasicMaterial color={rootColor} transparent opacity={lerp(rootOpacity, mobile ? 0.28 : 0.31, clarityAmount)} depthWrite />
+        <meshBasicMaterial color={rootColor} transparent opacity={Math.min(0.42, lerp(rootOpacity, mobile ? 0.28 : 0.31, clarityAmount) * rootPresence)} depthWrite />
       </mesh>
       <mesh position={[rootPosition[0], rootPosition[1] + rootSize[1] / 2 - 0.16, 0.02]}>
         <boxGeometry args={[rootSize[0] * 0.84, 0.012, 0.018]} />
@@ -588,17 +649,17 @@ function ProductSurface({ progress, reducedMotion, mobile, narrativeMode = false
       </mesh>
       <mesh position={evidencePosition}>
         <planeGeometry args={evidenceSize} />
-        <meshBasicMaterial color="#17383b" transparent opacity={evidenceOpacity} depthWrite={false} />
+        <meshBasicMaterial color="#17383b" transparent opacity={evidenceOpacity * lerp(1, 0.7, resolutionProgress)} depthWrite={false} />
       </mesh>
       {outline('evidence-well', evidencePosition, evidenceSize, quietEdgeOpacity * 0.72, '#7fa9a0')}
       <mesh position={[metadataPosition[0], metadataPosition[1], 0.02]}>
         <planeGeometry args={[metadataSize[0], metadataSize[1] * 0.82]} />
-        <meshBasicMaterial color="#21484a" transparent opacity={metadataOpacity} depthWrite={false} />
+        <meshBasicMaterial color="#21484a" transparent opacity={metadataOpacity * lerp(1, 0.72, resolutionProgress)} depthWrite={false} />
       </mesh>
       {outline('metadata-region', metadataPosition, metadataSize, quietEdgeOpacity * 0.52)}
       <mesh position={[actionPosition[0], actionPosition[1], 0.022]}>
         <planeGeometry args={[actionSize[0], actionSize[1] * 0.82]} />
-        <meshBasicMaterial color="#18484a" transparent opacity={actionOpacity * 0.6} depthWrite={false} />
+        <meshBasicMaterial color="#18484a" transparent opacity={actionOpacity * lerp(0.6, 0.72, resolutionProgress)} depthWrite={false} />
       </mesh>
       {outline('action-region', actionPosition, actionSize, actionOpacity * lerp(1, 0.52, clarityAmount), '#05b19b')}
       <group position={mobile
@@ -624,32 +685,38 @@ function CameraDirector({ progress, reducedMotion, mobile, reviewAngle, productM
   useFrame((state) => {
     if (narrativeMode) {
       const productArrival = smoothStep((progress - 0.75) / 0.25);
-      const pointerX = reducedMotion ? 0 : state.pointer.x * 0.045;
-      const pointerY = reducedMotion ? 0 : state.pointer.y * 0.025;
+      const settle = settleAmount(progress);
+      const resolution = resolutionAmount(progress);
+      const cameraArrival = lerp(productArrival, 0.34, settle);
+      const pointerX = reducedMotion ? 0 : state.pointer.x * lerp(0.045, 0.018, settle) * (1 - resolution);
+      const pointerY = reducedMotion ? 0 : state.pointer.y * lerp(0.025, 0.012, settle) * (1 - resolution);
       const angleOffset = reviewAngle ? 0.28 : 0;
-      const cameraX = mobile ? lerp(0, 0.12, productArrival) : lerp(0, 0.48, productArrival) + angleOffset;
-      const cameraY = mobile ? lerp(0.05, 0.08, productArrival) : lerp(0.04, 0.07, productArrival);
-      const cameraZ = mobile ? lerp(8.6, 8.05, productArrival) : lerp(8.65, 7.72, productArrival);
+      const cameraX = mobile ? lerp(0, 0.12, cameraArrival) : lerp(0, 0.48, cameraArrival) + angleOffset;
+      const cameraY = mobile ? lerp(0.05, 0.08, cameraArrival) : lerp(0.04, 0.07, cameraArrival);
+      const cameraZ = mobile ? lerp(8.6, 8.05, cameraArrival) : lerp(8.65, 7.72, cameraArrival);
       camera.position.set(cameraX + pointerX, cameraY + pointerY, cameraZ);
 
-      const targetX = mobile ? lerp(0, 0.05, productArrival) : lerp(0, 0.42, productArrival);
-      const targetY = mobile ? 0.05 : lerp(0, 0.02, productArrival);
+      const targetX = mobile ? lerp(0, 0.05, cameraArrival) : lerp(0, 0.42, cameraArrival);
+      const targetY = mobile ? 0.05 : lerp(0, 0.02, cameraArrival);
       camera.lookAt(targetX - pointerX * 0.2, targetY - pointerY * 0.15, -0.22);
       return;
     }
 
     if (productMode) {
       const planeArrival = smoothStep((progress - 0.1) / 0.7);
-      const pointerX = reducedMotion ? 0 : state.pointer.x * 0.045;
-      const pointerY = reducedMotion ? 0 : state.pointer.y * 0.025;
+      const settle = settleAmount(progress);
+      const resolution = resolutionAmount(progress);
+      const cameraArrival = lerp(planeArrival, 1, settle);
+      const pointerX = reducedMotion ? 0 : state.pointer.x * lerp(0.045, 0.018, settle) * (1 - resolution);
+      const pointerY = reducedMotion ? 0 : state.pointer.y * lerp(0.025, 0.012, settle) * (1 - resolution);
       const angleOffset = reviewAngle ? 0.28 : 0;
-      const cameraX = mobile ? lerp(0.18, 0.12, planeArrival) : lerp(0.94, 0.48, planeArrival) + angleOffset;
-      const cameraY = mobile ? lerp(0.12, 0.08, planeArrival) : lerp(0.16, 0.07, planeArrival);
-      const cameraZ = mobile ? lerp(8.2, 8.05, planeArrival) : lerp(8.05, 7.72, planeArrival);
+      const cameraX = mobile ? lerp(0.18, 0.12, cameraArrival) : lerp(0.94, 0.48, cameraArrival) + angleOffset;
+      const cameraY = mobile ? lerp(0.12, 0.08, cameraArrival) : lerp(0.16, 0.07, cameraArrival);
+      const cameraZ = mobile ? lerp(8.2, 8.05, cameraArrival) : lerp(8.05, 7.72, cameraArrival);
       camera.position.set(cameraX + pointerX, cameraY + pointerY, cameraZ);
 
-      const targetX = mobile ? 0.05 : lerp(0.2, 0.42, planeArrival);
-      const targetY = mobile ? 0.05 : lerp(0.08, 0.02, planeArrival);
+      const targetX = mobile ? 0.05 : lerp(0.2, 0.42, cameraArrival);
+      const targetY = mobile ? 0.05 : lerp(0.08, 0.02, cameraArrival);
       camera.lookAt(targetX - pointerX * 0.2, targetY - pointerY * 0.15, -0.22);
       return;
     }
@@ -688,11 +755,13 @@ function SpatialScene({ progress, reducedMotion, mobile, reviewAngle }: { progre
 }
 
 function ProductScene({ progress, reducedMotion, mobile, reviewAngle }: { progress: number; reducedMotion: boolean; mobile: boolean; reviewAngle: boolean }) {
+  const resolutionProgress = resolutionAmount(progress);
+
   return (
     <>
       <CameraDirector progress={progress} reducedMotion={reducedMotion} mobile={mobile} reviewAngle={reviewAngle} productMode />
       <ambientLight intensity={0.9} />
-      <ProductSurface progress={progress} reducedMotion={reducedMotion} mobile={mobile} />
+      <ProductSurface progress={progress} reducedMotion={reducedMotion} mobile={mobile} resolutionProgress={resolutionProgress} />
       {ACTORS.map((spec) => (
         <Actor key={spec.id} spec={spec} progress={progress} reducedMotion={reducedMotion} mobile={mobile} productMode />
       ))}
@@ -704,6 +773,7 @@ function NarrativeScene({ progress, reducedMotion, mobile, reviewAngle }: { prog
   const structureProgress = clamp01((progress - 0.18) / 0.5);
   const productProgress = clamp01((progress - 0.35) / 0.47);
   const clarityProgress = smoothStep((progress - 0.72) / 0.28);
+  const resolutionProgress = resolutionAmount(progress);
 
   return (
     <>
@@ -711,7 +781,7 @@ function NarrativeScene({ progress, reducedMotion, mobile, reviewAngle }: { prog
       <ambientLight intensity={0.9} />
       <StructuralClue progress={structureProgress} reducedMotion={reducedMotion} clarityProgress={clarityProgress} />
       <StructureAccent progress={structureProgress} reducedMotion={reducedMotion} clarityProgress={clarityProgress} />
-      <ProductSurface progress={productProgress} reducedMotion={reducedMotion} mobile={mobile} narrativeMode clarityProgress={clarityProgress} />
+      <ProductSurface progress={productProgress} reducedMotion={reducedMotion} mobile={mobile} narrativeMode clarityProgress={clarityProgress} resolutionProgress={resolutionProgress} />
       {ACTORS.map((spec) => (
         <Actor key={spec.id} spec={spec} progress={progress} reducedMotion={reducedMotion} mobile={mobile} narrativeMode clarityMode />
       ))}

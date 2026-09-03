@@ -136,7 +136,8 @@ export function SpatialPrototype() {
   const [mobile, setMobile] = useState(false);
   const reviewUrl = useSyncExternalStore(subscribeToReviewUrl, getReviewUrl, () => '');
   const review = new URLSearchParams(reviewUrl).get('review') ?? '';
-  const reviewNoCopy = review.includes('no-copy') || review.includes('living-product') || review.includes('clarity');
+  const reviewResolutionMoment = review.includes('resolution-moment');
+  const reviewNoCopy = review.includes('no-copy') || review.includes('living-product') || review.includes('clarity') || reviewResolutionMoment;
   const reviewAngle = review.includes('depth-angle');
   const reviewLivingProduct = review.includes('living-product');
   const reviewClarityBoundary = review.includes('clarity-boundary');
@@ -144,6 +145,8 @@ export function SpatialPrototype() {
   const reviewNarrativeTransition = review.includes('narrative-transition');
   const sceneProgress = reducedMotion ? Math.round(progress * 5) / 5 : progress;
   const clarityResolution = smoothStep((progress - 0.72) / 0.28);
+  const settleProgress = smoothStep((progress - 0.68) / 0.14);
+  const resolutionProgress = smoothStep((progress - 0.82) / 0.16);
 
   useEffect(() => {
     const media = window.matchMedia('(max-width: 767px)');
@@ -154,23 +157,35 @@ export function SpatialPrototype() {
   }, []);
 
   useEffect(() => {
-    if (!reviewLivingProduct && !reviewClarity && !reviewClarityBoundary && !reviewNarrativeTransition) return undefined;
+    if (!reviewLivingProduct && !reviewClarity && !reviewClarityBoundary && !reviewNarrativeTransition && !reviewResolutionMoment) return undefined;
     const frame = window.requestAnimationFrame(() => {
       const section = sectionRef.current;
       if (!section) return;
       const travel = Math.max(1, section.offsetHeight - window.innerHeight);
-      const targetProgress = reviewClarityBoundary ? 0.78 : reviewClarity ? 0.95 : reviewLivingProduct ? 0.9 : 0;
+      const targetProgress = reviewResolutionMoment
+        ? 0.92
+        : reviewClarityBoundary
+          ? 0.78
+          : reviewClarity
+            ? 0.95
+            : reviewLivingProduct
+              ? 0.9
+              : 0;
       window.scrollTo(0, section.offsetTop + travel * targetProgress);
     });
     return () => window.cancelAnimationFrame(frame);
-  }, [reviewClarity, reviewClarityBoundary, reviewLivingProduct, reviewNarrativeTransition]);
+  }, [reviewClarity, reviewClarityBoundary, reviewLivingProduct, reviewNarrativeTransition, reviewResolutionMoment]);
 
   return (
     <section
       ref={sectionRef}
       id="v4a-scene"
-      className="v4f-space"
-      style={{ '--v4g-resolution': clarityResolution } as CSSProperties}
+      className="v4f-space v4h-root"
+      style={{
+        '--v4g-resolution': clarityResolution,
+        '--v4h-settle': settleProgress,
+        '--v4h-resolution': resolutionProgress,
+      } as CSSProperties}
       aria-labelledby="v4a-hero-title"
     >
       <div className="v4f-space__sticky">
