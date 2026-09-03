@@ -2206,6 +2206,8 @@ a {
   }
 }
 
+/* V4G audit evidence uses the current stylesheet compilation. */
+
 /* V4E — clarity pass: one operational object, with restrained semantic emphasis. */
 .v4c-actor {
   --v4e-state-progress: 0;
@@ -2369,4 +2371,105 @@ a {
     max-width: 520px;
   }
   .v4f-space .v4a-copy__beat h2 { font-size: clamp(33px, 9.6vw, 45px); }
+}
+
+/* V4G — the product resolves into a calmer clarity plane. */
+.v4f-space {
+  --v4g-resolution: 0;
+}
+
+.v4f-space::before {
+  opacity: calc(1 - var(--v4g-resolution) * 0.78);
+}
+
+.v4f-space__sticky::after {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 70% 54%, rgba(244, 247, 245, 0.92) 0%, rgba(244, 247, 245, 0.74) 42%, rgba(244, 247, 245, 0.2) 71%, transparent 87%),
+    linear-gradient(104deg, transparent 0%, transparent 48%, rgba(244, 247, 245, 0.44) 100%);
+  opacity: calc(var(--v4g-resolution) * 0.82);
+  content: '';
+}
+
+.v4f-space__atmosphere {
+  opacity: calc(1 - var(--v4g-resolution) * 0.72);
+}
+
+.v4g-actor {
+  color: var(--v4g-ink);
+  text-shadow: none;
+  transition:
+    background-color 280ms var(--cs-ease),
+    border-color 280ms var(--cs-ease),
+    box-shadow 280ms var(--cs-ease),
+    color 280ms var(--cs-ease);
+}
+
+.v4g-actor .v4a-actor__label,
+.v4g-actor .v4a-actor__line,
+.v4g-actor .v4a-actor__dash {
+  color: var(--v4g-label);
+}
+
+.v4g-actor .v4a-actor__line {
+  color: var(--v4g-line);
+}
+
+.v4g-actor .v4a-actor__ref {
+  color: var(--v4g-ref);
+}
+
+.v4g-actor.v4a-actor--fecha,
+.v4g-actor.v4a-actor--estado,
+.v4g-actor.v4a-actor--accion {
+  color: var(--v4g-ink);
+}
+
+.v4g-actor.v4a-actor--responsable {
+  color: var(--v4g-ink);
+}
+
+.v4g-actor.v4a-actor--responsable .v4a-actor__label,
+.v4g-actor.v4a-actor--responsable .v4a-actor__dash {
+  color: var(--v4g-label);
+  text-shadow: none;
+}
+
+.v4g-actor.v4a-actor--solicitud {
+  background: rgba(244, 247, 245, calc(0.58 + var(--v4g-resolution) * 0.18));
+  border-left-color: rgba(5, 127, 113, calc(0.78 - var(--v4g-resolution) * 0.08));
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, calc(0.12 + var(--v4g-resolution) * 0.12)), 12px 14px 28px rgba(4, 24, 27, calc(0.1 - var(--v4g-resolution) * 0.06));
+}
+
+.v4g-actor.v4a-actor--documento {
+  background: rgba(252, 250, 243, calc(0.42 + var(--v4g-resolution) * 0.24));
+  border-color: rgba(72, 87, 82, calc(0.34 - var(--v4g-resolution) * 0.12));
+  box-shadow: -11px 0 0 -10px rgba(5, 127, 113, calc(0.4 - var(--v4g-resolution) * 0.12)), 8px 11px 20px rgba(5, 25, 28, calc(0.1 - var(--v4g-resolution) * 0.06));
+}
+
+.v4g-actor.v4a-actor--responsable,
+.v4g-actor.v4a-actor--fecha {
+  border-top-color: rgba(126, 204, 190, calc(0.34 - var(--v4g-resolution) * 0.12));
+}
+
+.v4g-actor.v4a-actor--estado {
+  background: rgba(220, 231, 228, calc(0.045 + var(--v4g-resolution) * 0.12));
+}
+
+.v4g-actor.v4a-actor--accion {
+  background: rgba(168, 220, 207, calc(0.06 + var(--v4g-resolution) * 0.13));
+  border-color: rgba(5, 127, 113, calc(0.55 - var(--v4g-resolution) * 0.1));
+  border-bottom-color: rgba(5, 177, 155, calc(0.82 - var(--v4g-resolution) * 0.08));
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, calc(0.08 + var(--v4g-resolution) * 0.08)), 5px 7px 16px rgba(4, 24, 27, calc(0.1 - var(--v4g-resolution) * 0.06));
+}
+
+@media (max-width: 767px) {
+  .v4f-space__sticky::after {
+    background:
+      radial-gradient(ellipse at 52% 62%, rgba(244, 247, 245, 0.92) 0%, rgba(244, 247, 245, 0.72) 42%, rgba(244, 247, 245, 0.18) 74%, transparent 90%),
+      linear-gradient(180deg, transparent 0%, transparent 45%, rgba(244, 247, 245, 0.42) 100%);
+  }
 }

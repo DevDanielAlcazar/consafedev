@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { ArrowDown, ArrowUpRight } from 'lucide-react';
 import { useReducedMotion } from 'motion/react';
-import { useEffect, useRef, useState, useSyncExternalStore, type RefObject } from 'react';
+import { useEffect, useRef, useState, useSyncExternalStore, type CSSProperties, type RefObject } from 'react';
 
 const SpatialCanvas = dynamic(() => import('./spatial-canvas'), { ssr: false });
 
@@ -115,12 +115,13 @@ function StoryCopy({ progress }: { progress: number }) {
 
 function ProductCopy({ progress, narrativeMode = false }: { progress: number; narrativeMode?: boolean }) {
   const copyIn = narrativeMode ? smoothStep((progress - 0.76) / 0.08) : smoothStep((progress - 0.47) / 0.12);
+  const copyOut = narrativeMode ? smoothStep((progress - 0.86) / 0.1) : 0;
 
   return (
     <div className="v4c-copy">
       <div
         className="v4c-copy__beat"
-        style={{ opacity: copyIn, transform: `translate3d(0, ${(1 - copyIn) * 18}px, 0)` }}
+        style={{ opacity: copyIn * (1 - copyOut), transform: `translate3d(0, ${(1 - copyIn + copyOut) * 18}px, 0)` }}
       >
         <h2 id="v4c-product-title">Después lo convertimos en software que tu equipo puede usar.</h2>
       </div>
@@ -138,9 +139,11 @@ export function SpatialPrototype() {
   const reviewNoCopy = review.includes('no-copy') || review.includes('living-product') || review.includes('clarity');
   const reviewAngle = review.includes('depth-angle');
   const reviewLivingProduct = review.includes('living-product');
-  const reviewClarity = review.includes('clarity');
+  const reviewClarityBoundary = review.includes('clarity-boundary');
+  const reviewClarity = !reviewClarityBoundary && review.includes('clarity');
   const reviewNarrativeTransition = review.includes('narrative-transition');
   const sceneProgress = reducedMotion ? Math.round(progress * 5) / 5 : progress;
+  const clarityResolution = smoothStep((progress - 0.72) / 0.28);
 
   useEffect(() => {
     const media = window.matchMedia('(max-width: 767px)');
@@ -151,19 +154,25 @@ export function SpatialPrototype() {
   }, []);
 
   useEffect(() => {
-    if (!reviewLivingProduct && !reviewClarity && !reviewNarrativeTransition) return undefined;
+    if (!reviewLivingProduct && !reviewClarity && !reviewClarityBoundary && !reviewNarrativeTransition) return undefined;
     const frame = window.requestAnimationFrame(() => {
       const section = sectionRef.current;
       if (!section) return;
       const travel = Math.max(1, section.offsetHeight - window.innerHeight);
-      const targetProgress = reviewClarity ? 0.95 : reviewLivingProduct ? 0.9 : 0;
+      const targetProgress = reviewClarityBoundary ? 0.78 : reviewClarity ? 0.95 : reviewLivingProduct ? 0.9 : 0;
       window.scrollTo(0, section.offsetTop + travel * targetProgress);
     });
     return () => window.cancelAnimationFrame(frame);
-  }, [reviewClarity, reviewLivingProduct, reviewNarrativeTransition]);
+  }, [reviewClarity, reviewClarityBoundary, reviewLivingProduct, reviewNarrativeTransition]);
 
   return (
-    <section ref={sectionRef} id="v4a-scene" className="v4f-space" aria-labelledby="v4a-hero-title">
+    <section
+      ref={sectionRef}
+      id="v4a-scene"
+      className="v4f-space"
+      style={{ '--v4g-resolution': clarityResolution } as CSSProperties}
+      aria-labelledby="v4a-hero-title"
+    >
       <div className="v4f-space__sticky">
         <div className="v4f-space__atmosphere" aria-hidden="true" />
         <SpatialCanvas progress={sceneProgress} reducedMotion={Boolean(reducedMotion)} mobile={mobile} reviewAngle={reviewAngle} narrativeMode />

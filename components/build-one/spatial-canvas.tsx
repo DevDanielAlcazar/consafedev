@@ -86,8 +86,8 @@ function lerp(a: number, b: number, amount: number) {
   return a + (b - a) * amount;
 }
 
-function ActorSurface({ id, referenceReveal, productMode, livingState }: { id: ActorId; referenceReveal: number; productMode: boolean; livingState: 'focus' | 'evidence' | 'metadata' | 'ready' | 'state' | null }) {
-  const surfaceClass = `${productMode ? ' v4c-actor' : ''}${livingState ? ` v4c-actor--living-${livingState}` : ''}`;
+function ActorSurface({ id, referenceReveal, productMode, livingState, clarityMode }: { id: ActorId; referenceReveal: number; productMode: boolean; livingState: 'focus' | 'evidence' | 'metadata' | 'ready' | 'state' | null; clarityMode: boolean }) {
+  const surfaceClass = `${productMode ? ' v4c-actor' : ''}${clarityMode && productMode ? ' v4g-actor' : ''}${livingState ? ` v4c-actor--living-${livingState}` : ''}`;
 
   if (id === 'solicitud') {
     return (
@@ -146,7 +146,7 @@ function ActorSurface({ id, referenceReveal, productMode, livingState }: { id: A
   );
 }
 
-function Actor({ spec, progress, reducedMotion, mobile, productMode = false, narrativeMode = false }: { spec: ActorSpec; progress: number; reducedMotion: boolean; mobile: boolean; productMode?: boolean; narrativeMode?: boolean }) {
+function Actor({ spec, progress, reducedMotion, mobile, productMode = false, narrativeMode = false, clarityMode = false }: { spec: ActorSpec; progress: number; reducedMotion: boolean; mobile: boolean; productMode?: boolean; narrativeMode?: boolean; clarityMode?: boolean }) {
   const groupRef = useRef<THREE.Group>(null);
   const narrativeConvergence = narrativeMode ? smoothStep((progress - 0.35) / 0.33) : 0;
   const narrativeProductProgress = narrativeMode ? clamp01((progress - 0.35) / 0.47) : 0;
@@ -161,6 +161,7 @@ function Actor({ spec, progress, reducedMotion, mobile, productMode = false, nar
   const livingMetadata = productMode || narrativeMode ? smoothStep((livingTimeline - 0.78) / 0.1) : 0;
   const livingReady = productMode || narrativeMode ? smoothStep((livingTimeline - 0.84) / 0.12) : 0;
   const livingState = productMode || narrativeMode ? smoothStep((livingTimeline - 0.88) / 0.08) : 0;
+  const clarityAmount = clarityMode ? smoothStep((progress - 0.72) / 0.28) : 0;
   const productLanding = productMode
     ? spec.id === 'solicitud' || spec.id === 'documento'
       ? contextLanding
@@ -284,7 +285,15 @@ function Actor({ spec, progress, reducedMotion, mobile, productMode = false, nar
             : spec.id === 'accion'
               ? livingReady
               : livingState;
-      group.position.set(alignedPosition[0], alignedPosition[1], alignedPosition[2]);
+      const depthCollapse = clarityAmount * {
+        solicitud: 0.92,
+        documento: 0.72,
+        responsable: 0.96,
+        fecha: 0.96,
+        estado: 0.94,
+        accion: 0.86,
+      }[spec.id];
+      group.position.set(alignedPosition[0], alignedPosition[1], lerp(alignedPosition[2], mobile ? 0.018 : 0.04, depthCollapse));
       group.position.y += spec.id === 'solicitud' ? roleResponse * 0.022 : spec.id === 'documento' ? roleResponse * 0.016 : spec.id === 'accion' ? roleResponse * 0.012 : 0;
       group.position.z += spec.id === 'solicitud' ? roleResponse * 0.028 : spec.id === 'documento' ? roleResponse * 0.02 : spec.id === 'accion' ? roleResponse * 0.018 : 0;
       group.rotation.x = lerp(recognitionRotation[0], destination.rotation[0], narrativeRoleConvergence);
@@ -412,7 +421,12 @@ function Actor({ spec, progress, reducedMotion, mobile, productMode = false, nar
   const style = useMemo<CSSProperties>(() => ({
     opacity: renderedOpacity,
     '--v4e-state-progress': livingProgress,
-  } as CSSProperties), [livingProgress, renderedOpacity]);
+    '--v4g-resolution': clarityAmount,
+    '--v4g-ink': `rgba(${Math.round(lerp(218, 16, clarityAmount))}, ${Math.round(lerp(236, 37, clarityAmount))}, ${Math.round(lerp(231, 44, clarityAmount))}, 0.88)`,
+    '--v4g-label': `rgba(${Math.round(lerp(218, 39, clarityAmount))}, ${Math.round(lerp(236, 63, clarityAmount))}, ${Math.round(lerp(231, 64, clarityAmount))}, 0.86)`,
+    '--v4g-line': `rgba(${Math.round(lerp(218, 44, clarityAmount))}, ${Math.round(lerp(236, 69, clarityAmount))}, ${Math.round(lerp(231, 68, clarityAmount))}, 0.74)`,
+    '--v4g-ref': `rgba(${Math.round(lerp(201, 84, clarityAmount))}, ${Math.round(lerp(226, 107, clarityAmount))}, ${Math.round(lerp(220, 96, clarityAmount))}, 0.9)`,
+  } as CSSProperties), [clarityAmount, livingProgress, renderedOpacity]);
 
   return (
     <group ref={groupRef} position={initialPosition} rotation={initialRotation}>
@@ -430,17 +444,17 @@ function Actor({ spec, progress, reducedMotion, mobile, productMode = false, nar
         style={style}
         zIndexRange={spec.depth === 'near' ? [30, 0] : spec.depth === 'mid' ? [20, 0] : [10, 0]}
       >
-        <ActorSurface id={spec.id} referenceReveal={productAppearance ? 1 : referenceReveal} productMode={productAppearance} livingState={livingStateForActor} />
+      <ActorSurface id={spec.id} referenceReveal={productAppearance ? 1 : referenceReveal} productMode={productAppearance} livingState={livingStateForActor} clarityMode={clarityMode} />
       </Html>
     </group>
   );
 }
 
-function StructuralClue({ progress, reducedMotion }: { progress: number; reducedMotion: boolean }) {
+function StructuralClue({ progress, reducedMotion, clarityProgress = 0 }: { progress: number; reducedMotion: boolean; clarityProgress?: number }) {
   const groupRef = useRef<THREE.Group>(null);
   const reveal = smoothStep((progress - 0.58) / 0.18);
   const structureProgress = smoothStep((progress - 0.76) / 0.2);
-  const clueOpacity = reducedMotion ? (progress > 0.64 ? 0.3 : 0.035) : lerp(0.035, 0.34, reveal);
+  const clueOpacity = (reducedMotion ? (progress > 0.64 ? 0.3 : 0.035) : lerp(0.035, 0.34, reveal)) * lerp(1, 0.08, clarityProgress);
 
   useFrame(() => {
     const group = groupRef.current;
@@ -473,9 +487,9 @@ function StructuralClue({ progress, reducedMotion }: { progress: number; reduced
   );
 }
 
-function StructureAccent({ progress, reducedMotion }: { progress: number; reducedMotion: boolean }) {
+function StructureAccent({ progress, reducedMotion, clarityProgress = 0 }: { progress: number; reducedMotion: boolean; clarityProgress?: number }) {
   const reveal = smoothStep((progress - 0.85) / 0.11);
-  const opacity = reducedMotion ? (progress > 0.9 ? 0.25 : 0.02) : lerp(0.02, 0.25, reveal);
+  const opacity = (reducedMotion ? (progress > 0.9 ? 0.25 : 0.02) : lerp(0.02, 0.25, reveal)) * lerp(1, 0.04, clarityProgress);
 
   return (
     <group position={[1.62, -1.78, -0.12]} rotation={[0.06, 0.03, -0.025]} scale={[lerp(0.2, 0.68, reveal), 1, 1]}>
@@ -491,8 +505,9 @@ function StructureAccent({ progress, reducedMotion }: { progress: number; reduce
   );
 }
 
-function ProductSurface({ progress, reducedMotion, mobile, narrativeMode = false }: { progress: number; reducedMotion: boolean; mobile: boolean; narrativeMode?: boolean }) {
+function ProductSurface({ progress, reducedMotion, mobile, narrativeMode = false, clarityProgress = 0 }: { progress: number; reducedMotion: boolean; mobile: boolean; narrativeMode?: boolean; clarityProgress?: number }) {
   const groupRef = useRef<THREE.Group>(null);
+  const clarityAmount = clarityProgress;
   const rootReveal = narrativeMode ? smoothStep((progress - 0.62) / 0.2) : smoothStep((progress - 0.08) / 0.72);
   const edgeReveal = narrativeMode ? smoothStep((progress - 0.42) / 0.2) : rootReveal;
   const evidenceReveal = smoothStep((progress - 0.26) / 0.22);
@@ -501,20 +516,26 @@ function ProductSurface({ progress, reducedMotion, mobile, narrativeMode = false
   const rootOpacity = reducedMotion
     ? (narrativeMode ? (progress > 0.68 ? (mobile ? 0.2 : 0.22) : 0.004) : progress > 0.28 ? (mobile ? 0.2 : 0.22) : 0.02)
     : lerp(narrativeMode ? 0.004 : 0.012, mobile ? 0.2 : 0.22, rootReveal);
-  const evidenceOpacity = reducedMotion ? (progress > 0.46 ? 0.045 : 0.015) : lerp(0.012, 0.045, evidenceReveal);
-  const metadataOpacity = reducedMotion ? (progress > 0.58 ? 0.075 : 0.02) : lerp(0.02, 0.075, metadataReveal);
-  const actionOpacity = reducedMotion ? (progress > 0.7 ? 0.12 : 0.02) : lerp(0.02, 0.12, actionReveal);
+  const evidenceOpacity = (reducedMotion ? (progress > 0.46 ? 0.045 : 0.015) : lerp(0.012, 0.045, evidenceReveal)) * lerp(1, 0.72, clarityAmount);
+  const metadataOpacity = (reducedMotion ? (progress > 0.58 ? 0.075 : 0.02) : lerp(0.02, 0.075, metadataReveal)) * lerp(1, 0.58, clarityAmount);
+  const actionOpacity = (reducedMotion ? (progress > 0.7 ? 0.12 : 0.02) : lerp(0.02, 0.12, actionReveal)) * lerp(1, 0.64, clarityAmount);
   const edgeOpacity = reducedMotion
     ? (narrativeMode ? (progress > 0.62 ? 0.46 : 0.035) : progress > 0.28 ? 0.46 : 0.035)
     : lerp(0.035, 0.46, edgeReveal);
+  const quietEdgeOpacity = edgeOpacity * lerp(1, 0.12, clarityAmount);
+  const bridgeLength = mobile ? lerp(0.14, 1.82, clarityAmount) : lerp(0.16, 3.15, clarityAmount);
+  const bridgeOpacity = lerp(0, 0.82, clarityAmount);
+  const rootColor = useMemo(() => new THREE.Color('#5f817b').lerp(new THREE.Color('#d5e0da'), clarityAmount), [clarityAmount]);
 
   useFrame(() => {
     const group = groupRef.current;
     if (!group) return;
 
     const arrival = narrativeMode ? smoothStep((progress - 0.62) / 0.2) : smoothStep((progress - 0.08) / 0.72);
-    group.rotation.y = lerp(mobile ? 0.035 : 0.07, mobile ? 0.008 : 0.018, arrival);
-    group.rotation.z = lerp(-0.018, 0.002, arrival);
+    const rotationY = lerp(mobile ? 0.035 : 0.07, mobile ? 0.008 : 0.018, arrival);
+    const rotationZ = lerp(-0.018, 0.002, arrival);
+    group.rotation.y = lerp(rotationY, mobile ? 0.002 : 0.006, clarityAmount);
+    group.rotation.z = lerp(rotationZ, 0, clarityAmount);
   });
 
   const rootSize: [number, number] = mobile ? [2.28, 3.02] : [4.72, 2.78];
@@ -555,31 +576,44 @@ function ProductSurface({ progress, reducedMotion, mobile, narrativeMode = false
     <group ref={groupRef} position={mobile ? [0, 0.02, -0.34] : [0.15, 0.02, -0.34]} rotation={[0.02, 0.07, -0.018]} scale={narrativeMode ? [1, 1, 1] : [lerp(0.9, 1, rootReveal), lerp(0.9, 1, rootReveal), 1]}>
       <mesh position={rootPosition}>
         <planeGeometry args={rootSize} />
-        <meshBasicMaterial color="#5f817b" transparent opacity={rootOpacity} depthWrite />
+        <meshBasicMaterial color={rootColor} transparent opacity={lerp(rootOpacity, mobile ? 0.28 : 0.31, clarityAmount)} depthWrite />
       </mesh>
       <mesh position={[rootPosition[0], rootPosition[1] + rootSize[1] / 2 - 0.16, 0.02]}>
         <boxGeometry args={[rootSize[0] * 0.84, 0.012, 0.018]} />
-        <meshBasicMaterial color="#05b19b" transparent opacity={edgeOpacity * 0.7} depthWrite={false} />
+        <meshBasicMaterial color="#05b19b" transparent opacity={quietEdgeOpacity * 0.7} depthWrite={false} />
       </mesh>
       <mesh position={[rootPosition[0] - rootSize[0] / 2 + 0.11, rootPosition[1], 0.02]}>
         <boxGeometry args={[0.012, rootSize[1] * 0.78, 0.018]} />
-        <meshBasicMaterial color="#05b19b" transparent opacity={edgeOpacity * 0.58} depthWrite={false} />
+        <meshBasicMaterial color="#05b19b" transparent opacity={quietEdgeOpacity * 0.58} depthWrite={false} />
       </mesh>
       <mesh position={evidencePosition}>
         <planeGeometry args={evidenceSize} />
         <meshBasicMaterial color="#17383b" transparent opacity={evidenceOpacity} depthWrite={false} />
       </mesh>
-      {outline('evidence-well', evidencePosition, evidenceSize, edgeOpacity * 0.72, '#7fa9a0')}
+      {outline('evidence-well', evidencePosition, evidenceSize, quietEdgeOpacity * 0.72, '#7fa9a0')}
       <mesh position={[metadataPosition[0], metadataPosition[1], 0.02]}>
         <planeGeometry args={[metadataSize[0], metadataSize[1] * 0.82]} />
         <meshBasicMaterial color="#21484a" transparent opacity={metadataOpacity} depthWrite={false} />
       </mesh>
-      {outline('metadata-region', metadataPosition, metadataSize, edgeOpacity * 0.52)}
+      {outline('metadata-region', metadataPosition, metadataSize, quietEdgeOpacity * 0.52)}
       <mesh position={[actionPosition[0], actionPosition[1], 0.022]}>
         <planeGeometry args={[actionSize[0], actionSize[1] * 0.82]} />
         <meshBasicMaterial color="#18484a" transparent opacity={actionOpacity * 0.6} depthWrite={false} />
       </mesh>
-      {outline('action-region', actionPosition, actionSize, actionOpacity, '#05b19b')}
+      {outline('action-region', actionPosition, actionSize, actionOpacity * lerp(1, 0.52, clarityAmount), '#05b19b')}
+      <group position={mobile
+        ? [actionPosition[0], actionPosition[1] - actionSize[1] / 2, 0.052]
+        : [rootPosition[0] + rootSize[0] / 2 - 0.02, actionPosition[1], 0.052]}
+      >
+        <mesh position={mobile ? [0, -bridgeLength / 2, 0] : [bridgeLength / 2, 0, 0]}>
+          <boxGeometry args={mobile ? [0.014, bridgeLength, 0.02] : [bridgeLength, 0.014, 0.02]} />
+          <meshBasicMaterial color="#05b19b" transparent opacity={bridgeOpacity} depthWrite={false} />
+        </mesh>
+        <mesh position={mobile ? [0.06, -bridgeLength, 0] : [bridgeLength, -0.06, 0]}>
+          <boxGeometry args={mobile ? [0.14, 0.014, 0.02] : [0.014, 0.14, 0.02]} />
+          <meshBasicMaterial color="#05b19b" transparent opacity={bridgeOpacity * 0.72} depthWrite={false} />
+        </mesh>
+      </group>
     </group>
   );
 }
@@ -669,16 +703,17 @@ function ProductScene({ progress, reducedMotion, mobile, reviewAngle }: { progre
 function NarrativeScene({ progress, reducedMotion, mobile, reviewAngle }: { progress: number; reducedMotion: boolean; mobile: boolean; reviewAngle: boolean }) {
   const structureProgress = clamp01((progress - 0.18) / 0.5);
   const productProgress = clamp01((progress - 0.35) / 0.47);
+  const clarityProgress = smoothStep((progress - 0.72) / 0.28);
 
   return (
     <>
       <CameraDirector progress={progress} reducedMotion={reducedMotion} mobile={mobile} reviewAngle={reviewAngle} narrativeMode />
       <ambientLight intensity={0.9} />
-      <StructuralClue progress={structureProgress} reducedMotion={reducedMotion} />
-      <StructureAccent progress={structureProgress} reducedMotion={reducedMotion} />
-      <ProductSurface progress={productProgress} reducedMotion={reducedMotion} mobile={mobile} narrativeMode />
+      <StructuralClue progress={structureProgress} reducedMotion={reducedMotion} clarityProgress={clarityProgress} />
+      <StructureAccent progress={structureProgress} reducedMotion={reducedMotion} clarityProgress={clarityProgress} />
+      <ProductSurface progress={productProgress} reducedMotion={reducedMotion} mobile={mobile} narrativeMode clarityProgress={clarityProgress} />
       {ACTORS.map((spec) => (
-        <Actor key={spec.id} spec={spec} progress={progress} reducedMotion={reducedMotion} mobile={mobile} narrativeMode />
+        <Actor key={spec.id} spec={spec} progress={progress} reducedMotion={reducedMotion} mobile={mobile} narrativeMode clarityMode />
       ))}
     </>
   );
