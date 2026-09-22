@@ -16,7 +16,7 @@ export function SpatialOperatingSystem({
   reducedMotion = false,
 }: SpatialOperatingSystemProps) {
   /*
-   * Build 02.1 — Connected System
+   * Build 02.2 — Operational Spine
    *
    * The system no longer reads as four independent floating planes.
    * A persistent chassis, shared hinge geometry and scroll-driven causal
@@ -32,16 +32,22 @@ export function SpatialOperatingSystem({
 
   /* Keep the folds legible, but never so open that they look detached. */
   const requestRotateY = useTransform(progress, [0, 0.26, 0.56, 0.78, 1], [-18, -15, -8.5, -1.5, 0]);
-  const requestZ = useTransform(progress, [0, 0.4, 0.78, 1], [34, 27, 8, 0]);
+  const requestZ = useTransform(progress, [0, 0.4, 0.78, 1], [27, 22, 6, 0]);
 
   const evidenceRotateY = useTransform(progress, [0, 0.24, 0.55, 0.78, 1], [31, 27, 16, 4.5, 0]);
-  const evidenceZ = useTransform(progress, [0, 0.35, 0.78, 1], [44, 36, 10, 0]);
+  const evidenceZ = useTransform(progress, [0, 0.35, 0.78, 1], [35, 29, 8, 0]);
 
   const contextRotateX = useTransform(progress, [0, 0.26, 0.56, 0.78, 1], [-34, -29, -17, -4.5, 0]);
-  const contextZ = useTransform(progress, [0, 0.35, 0.78, 1], [38, 31, 9, 0]);
+  const contextZ = useTransform(progress, [0, 0.35, 0.78, 1], [30, 25, 7, 0]);
 
   const actionRotateX = useTransform(progress, [0, 0.28, 0.56, 0.78, 1], [36, 31, 18, 4.8, 0]);
-  const actionZ = useTransform(progress, [0, 0.35, 0.78, 1], [48, 39, 11, 0]);
+  const actionZ = useTransform(progress, [0, 0.35, 0.78, 1], [37, 31, 9, 0]);
+
+  const facetBorderColor = useTransform(
+    progress,
+    [0, 0.56, 0.86, 1],
+    ["rgba(169, 208, 218, 0.15)", "rgba(169, 208, 218, 0.12)", "rgba(169, 208, 218, 0.08)", "rgba(169, 208, 218, 0.06)"],
+  );
 
   /* Shared structure is present from frame one and resolves with the facets. */
   const chassisOpacity = useTransform(progress, [0, 0.18, 0.46, 0.76, 1], [0.34, 0.5, 0.76, 0.9, 0.64]);
@@ -121,7 +127,7 @@ export function SpatialOperatingSystem({
 
           <motion.div
             className="sos-facet sos-facet--request"
-            style={reducedMotion ? undefined : { rotateY: requestRotateY, z: requestZ }}
+            style={reducedMotion ? { borderColor: "rgba(169, 208, 218, 0.07)" } : { rotateY: requestRotateY, z: requestZ, borderColor: facetBorderColor }}
           >
             <div className="sos-facet__grain" />
             <div className="sos-facet__dock sos-facet__dock--request" />
@@ -138,7 +144,7 @@ export function SpatialOperatingSystem({
 
           <motion.div
             className="sos-facet sos-facet--evidence"
-            style={reducedMotion ? undefined : { rotateY: evidenceRotateY, z: evidenceZ }}
+            style={reducedMotion ? { borderColor: "rgba(169, 208, 218, 0.07)" } : { rotateY: evidenceRotateY, z: evidenceZ, borderColor: facetBorderColor }}
           >
             <div className="sos-facet__grain" />
             <div className="sos-facet__dock sos-facet__dock--evidence" />
@@ -156,7 +162,7 @@ export function SpatialOperatingSystem({
 
           <motion.div
             className="sos-facet sos-facet--context"
-            style={reducedMotion ? undefined : { rotateX: contextRotateX, z: contextZ }}
+            style={reducedMotion ? { borderColor: "rgba(169, 208, 218, 0.07)" } : { rotateX: contextRotateX, z: contextZ, borderColor: facetBorderColor }}
           >
             <div className="sos-facet__grain" />
             <div className="sos-facet__dock sos-facet__dock--context" />
@@ -174,7 +180,7 @@ export function SpatialOperatingSystem({
 
           <motion.div
             className="sos-facet sos-facet--action"
-            style={reducedMotion ? undefined : { rotateX: actionRotateX, z: actionZ }}
+            style={reducedMotion ? { borderColor: "rgba(169, 208, 218, 0.07)" } : { rotateX: actionRotateX, z: actionZ, borderColor: facetBorderColor }}
           >
             <div className="sos-facet__grain" />
             <div className="sos-facet__dock sos-facet__dock--action" />
@@ -197,27 +203,27 @@ export function SpatialOperatingSystem({
             Each path is revealed by the same narrative scroll progress.
           */}
           <svg className="sos-relations" viewBox="0 0 1000 553" preserveAspectRatio="none">
-            <g className="sos-relations__base">
-              <path d="M260 154 C390 154 455 190 550 292 C635 207 715 159 805 159" />
-              <path d="M260 154 C338 245 420 278 550 292 C440 338 350 385 275 425" />
-              <path d="M275 425 C392 394 468 346 550 292 C650 350 730 394 785 410" />
-              <path d="M805 159 C713 224 641 252 550 292 C646 329 722 365 785 410" />
+            <g className="sos-relations__groove">
+              <path d="M260 154 C360 133 680 133 805 159" />
+              <path d="M260 154 C196 210 196 363 275 425" />
+              <path d="M275 425 C398 480 632 478 785 410" />
+              <path d="M805 159 C918 221 916 349 785 410" />
             </g>
             <g className="sos-relations__active">
               <motion.path
-                d="M260 154 C390 154 455 190 550 292 C635 207 715 159 805 159"
+                d="M260 154 C360 133 680 133 805 159"
                 style={reducedMotion ? staticPathStyle : { opacity: activeRelationOpacity, pathLength: requestToEvidence }}
               />
               <motion.path
-                d="M260 154 C338 245 420 278 550 292 C440 338 350 385 275 425"
+                d="M260 154 C196 210 196 363 275 425"
                 style={reducedMotion ? staticPathStyle : { opacity: relationOpacity, pathLength: requestToContext }}
               />
               <motion.path
-                d="M275 425 C392 394 468 346 550 292 C650 350 730 394 785 410"
+                d="M275 425 C398 480 632 478 785 410"
                 style={reducedMotion ? staticPathStyle : { opacity: activeRelationOpacity, pathLength: contextToReview }}
               />
               <motion.path
-                d="M805 159 C713 224 641 252 550 292 C646 329 722 365 785 410"
+                d="M805 159 C918 221 916 349 785 410"
                 style={reducedMotion ? staticPathStyle : { opacity: relationOpacity, pathLength: evidenceToReview }}
               />
             </g>
