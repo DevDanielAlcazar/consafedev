@@ -16,47 +16,53 @@ export function SpatialOperatingSystem({
   reducedMotion = false,
 }: SpatialOperatingSystemProps) {
   /*
-   * Build 02.2 — Operational Spine
+   * Build 02.3 — Structural Reveal
    *
-   * The system no longer reads as four independent floating planes.
-   * A persistent chassis, shared hinge geometry and scroll-driven causal
-   * paths make every actor feel physically and semantically attached to
-   * the same operational object.
+   * Build 02.2 established a causal operational spine. Build 02.3 keeps that
+   * logic intact but shifts the signature moment from "drawn relationships"
+   * to a physical structural lock: facets compress, material catches light,
+   * seams align and the product resolves as one precision object.
    */
-  const cameraRotateX = useTransform(progress, [0, 0.28, 0.58, 0.78, 1], [5.8, 4.4, 1.9, 0.3, 0]);
-  const cameraRotateY = useTransform(progress, [0, 0.25, 0.55, 0.78, 1], [-10.5, -8.2, -4.2, -0.6, 0]);
-  const cameraRotateZ = useTransform(progress, [0, 0.36, 0.7, 1], [-1.4, -1.0, -0.25, 0]);
-  const cameraScale = useTransform(progress, [0, 0.2, 0.58, 0.82, 1], [0.91, 0.94, 0.992, 1.012, 1.018]);
-  const cameraX = useTransform(progress, [0, 0.35, 0.7, 1], [50, 34, 14, 0]);
-  const cameraY = useTransform(progress, [0, 0.42, 0.76, 1], [17, 9, 2, 0]);
+  const cameraRotateX = useTransform(progress, [0, 0.28, 0.56, 0.72, 0.84, 1], [5.8, 4.4, 1.9, 0.55, 0, 0]);
+  const cameraRotateY = useTransform(progress, [0, 0.25, 0.54, 0.72, 0.84, 1], [-10.5, -8.2, -4.2, -1.2, 0, 0]);
+  const cameraRotateZ = useTransform(progress, [0, 0.36, 0.66, 0.82, 1], [-1.4, -1.0, -0.28, 0, 0]);
+  const cameraScale = useTransform(progress, [0, 0.2, 0.56, 0.76, 0.86, 1], [0.91, 0.94, 0.992, 1.008, 1.012, 1.012]);
+  const cameraX = useTransform(progress, [0, 0.35, 0.66, 0.82, 1], [50, 34, 14, 0, 0]);
+  const cameraY = useTransform(progress, [0, 0.42, 0.7, 0.84, 1], [17, 9, 2, 0, 0]);
 
   /* Keep the folds legible, but never so open that they look detached. */
-  const requestRotateY = useTransform(progress, [0, 0.26, 0.56, 0.78, 1], [-18, -15, -8.5, -1.5, 0]);
-  const requestZ = useTransform(progress, [0, 0.4, 0.78, 1], [27, 22, 6, 0]);
+  const requestRotateY = useTransform(progress, [0, 0.26, 0.56, 0.72, 0.84, 1], [-18, -15, -8.5, -2.4, 0, 0]);
+  const requestZ = useTransform(progress, [0, 0.4, 0.7, 0.84, 1], [27, 22, 7, 0, 0]);
 
-  const evidenceRotateY = useTransform(progress, [0, 0.24, 0.55, 0.78, 1], [31, 27, 16, 4.5, 0]);
-  const evidenceZ = useTransform(progress, [0, 0.35, 0.78, 1], [35, 29, 8, 0]);
+  const evidenceRotateY = useTransform(progress, [0, 0.24, 0.55, 0.72, 0.84, 1], [31, 27, 16, 5.5, 0, 0]);
+  const evidenceZ = useTransform(progress, [0, 0.35, 0.7, 0.84, 1], [35, 29, 9, 0, 0]);
 
-  const contextRotateX = useTransform(progress, [0, 0.26, 0.56, 0.78, 1], [-34, -29, -17, -4.5, 0]);
-  const contextZ = useTransform(progress, [0, 0.35, 0.78, 1], [30, 25, 7, 0]);
+  const contextRotateX = useTransform(progress, [0, 0.26, 0.56, 0.72, 0.84, 1], [-34, -29, -17, -5.5, 0, 0]);
+  const contextZ = useTransform(progress, [0, 0.35, 0.7, 0.84, 1], [30, 25, 8, 0, 0]);
 
-  const actionRotateX = useTransform(progress, [0, 0.28, 0.56, 0.78, 1], [36, 31, 18, 4.8, 0]);
-  const actionZ = useTransform(progress, [0, 0.35, 0.78, 1], [37, 31, 9, 0]);
+  const actionRotateX = useTransform(progress, [0, 0.28, 0.56, 0.72, 0.84, 1], [36, 31, 18, 5.8, 0, 0]);
+  const actionZ = useTransform(progress, [0, 0.35, 0.7, 0.84, 1], [37, 31, 10, 0, 0]);
 
   const facetBorderColor = useTransform(
     progress,
-    [0, 0.56, 0.86, 1],
-    ["rgba(169, 208, 218, 0.15)", "rgba(169, 208, 218, 0.12)", "rgba(169, 208, 218, 0.08)", "rgba(169, 208, 218, 0.06)"],
+    [0, 0.56, 0.78, 0.88, 1],
+    ["rgba(169, 208, 218, 0.15)", "rgba(169, 208, 218, 0.12)", "rgba(188, 220, 227, 0.17)", "rgba(169, 208, 218, 0.085)", "rgba(169, 208, 218, 0.055)"],
   );
 
   /* Shared structure is present from frame one and resolves with the facets. */
-  const chassisOpacity = useTransform(progress, [0, 0.18, 0.46, 0.76, 1], [0.34, 0.5, 0.76, 0.9, 0.64]);
-  const hingeOpacity = useTransform(progress, [0, 0.22, 0.56, 0.82, 1], [0.54, 0.72, 0.9, 0.76, 0.42]);
-  const jointScale = useTransform(progress, [0, 0.34, 0.72, 1], [0.86, 0.96, 1, 1]);
+  const chassisOpacity = useTransform(progress, [0, 0.18, 0.46, 0.74, 0.86, 1], [0.34, 0.5, 0.76, 0.94, 0.82, 0.68]);
+  const hingeOpacity = useTransform(progress, [0, 0.22, 0.56, 0.74, 0.88, 1], [0.52, 0.7, 0.86, 0.92, 0.52, 0.28]);
+  const jointScale = useTransform(progress, [0, 0.34, 0.72, 0.84, 1], [0.86, 0.96, 1, 0.96, 0.96]);
+  const jointOpacity = useTransform(progress, [0, 0.56, 0.74, 0.88, 1], [0.54, 0.5, 0.38, 0.22, 0.16]);
 
-  const rootOpacity = useTransform(progress, [0, 0.42, 0.66, 0.82, 1], [0.08, 0.14, 0.28, 0.76, 1]);
-  const rootScale = useTransform(progress, [0, 0.7, 0.86, 1], [0.982, 0.992, 1, 1]);
-  const seamOpacity = useTransform(progress, [0, 0.35, 0.7, 0.9, 1], [0.3, 0.54, 0.76, 0.48, 0.22]);
+  const rootOpacity = useTransform(progress, [0, 0.42, 0.66, 0.8, 0.9, 1], [0.08, 0.14, 0.3, 0.82, 0.96, 1]);
+  const rootScale = useTransform(progress, [0, 0.68, 0.82, 1], [0.982, 0.992, 1, 1]);
+  const seamOpacity = useTransform(progress, [0, 0.35, 0.66, 0.78, 0.9, 1], [0.26, 0.48, 0.68, 0.92, 0.46, 0.18]);
+
+  /* Signature moment: a structural lock, not another graphic effect. */
+  const materialRevealOpacity = useTransform(progress, [0.56, 0.66, 0.78, 0.88, 0.96, 1], [0, 0.12, 0.68, 0.32, 0.08, 0]);
+  const lockFrameOpacity = useTransform(progress, [0.62, 0.72, 0.82, 0.9, 1], [0, 0.16, 0.74, 0.38, 0.1]);
+  const lockFrameScale = useTransform(progress, [0.62, 0.82, 1], [0.987, 1, 1]);
 
   /* Causal relationships. They reveal in sequence instead of orbiting. */
   const requestToEvidence = useTransform(progress, [0.14, 0.31, 0.48], [0.08, 0.58, 1]);
@@ -64,7 +70,7 @@ export function SpatialOperatingSystem({
   const contextToReview = useTransform(progress, [0.45, 0.63, 0.8], [0.04, 0.62, 1]);
   const evidenceToReview = useTransform(progress, [0.5, 0.68, 0.84], [0.03, 0.58, 1]);
   const relationOpacity = useTransform(progress, [0, 0.13, 0.42, 0.72, 0.94, 1], [0.18, 0.3, 0.7, 0.92, 0.66, 0.42]);
-  const activeRelationOpacity = useTransform(progress, [0.08, 0.28, 0.52, 0.78, 1], [0.26, 0.62, 0.94, 0.86, 0.56]);
+  const activeRelationOpacity = useTransform(progress, [0.08, 0.28, 0.52, 0.76, 0.88, 1], [0.26, 0.62, 0.94, 0.86, 0.62, 0.4]);
 
   const requestFocus = useTransform(progress, [0.18, 0.32, 0.54], [0.58, 1, 0.82]);
   const evidenceFocus = useTransform(progress, [0.27, 0.43, 0.66], [0.5, 1, 0.82]);
@@ -74,7 +80,7 @@ export function SpatialOperatingSystem({
 
   const clarityOpacity = useTransform(progress, [0.84, 0.91, 0.97, 1], [0, 0.08, 0.56, 1]);
   const clarityScale = useTransform(progress, [0.84, 0.91, 0.97, 1], [0.7, 0.82, 1.7, 4.5]);
-  const productLift = useTransform(progress, [0.74, 0.9, 1], [0, 3, 6]);
+  const productLift = useTransform(progress, [0.72, 0.84, 1], [0, 1.5, 1]);
 
   const cameraStyle = reducedMotion
     ? {
@@ -119,7 +125,7 @@ export function SpatialOperatingSystem({
             <div className="sos-chassis__rib sos-chassis__rib--horizontal" />
             <motion.div
               className="sos-joint"
-              style={reducedMotion ? { scale: 1 } : { scale: jointScale }}
+              style={reducedMotion ? { scale: 1, opacity: 0.18 } : { scale: jointScale, opacity: jointOpacity }}
             >
               <i /><i /><i /><i />
             </motion.div>
@@ -228,6 +234,17 @@ export function SpatialOperatingSystem({
               />
             </g>
           </svg>
+
+          <motion.div
+            className="sos-material-reveal"
+            style={reducedMotion ? { opacity: 0.08 } : { opacity: materialRevealOpacity }}
+          />
+          <motion.div
+            className="sos-lock-frame"
+            style={reducedMotion ? { opacity: 0.16, scale: 1 } : { opacity: lockFrameOpacity, scale: lockFrameScale }}
+          >
+            <i /><i /><i /><i />
+          </motion.div>
 
           <motion.div className="sos-seam sos-seam--vertical" style={reducedMotion ? { opacity: 0.26 } : { opacity: seamOpacity }} />
           <motion.div className="sos-seam sos-seam--horizontal" style={reducedMotion ? { opacity: 0.26 } : { opacity: seamOpacity }} />
