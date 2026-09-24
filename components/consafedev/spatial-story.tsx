@@ -31,7 +31,7 @@ function NarrativeBeat({
   children,
 }: BeatProps) {
   const opacity = useTransform(progress, range, [0, 1, 1, 0]);
-  const y = useTransform(progress, range, [28, 0, 0, -20]);
+  const y = useTransform(progress, range, [20, 0, 0, -14]);
 
   return (
     <motion.div
@@ -48,8 +48,8 @@ function NarrativeBeat({
 }
 
 function HeroBeat({ progress }: { progress: MotionValue<number> }) {
-  const opacity = useTransform(progress, [0, 0.1, 0.19], [1, 1, 0]);
-  const y = useTransform(progress, [0, 0.12, 0.19], [0, 0, -24]);
+  const opacity = useTransform(progress, [0, 0.11, 0.155], [1, 1, 0]);
+  const y = useTransform(progress, [0, 0.11, 0.155], [0, 0, -18]);
 
   return (
     <motion.div className="hero-copy" style={{ opacity, y }}>
@@ -87,8 +87,19 @@ export function SpatialStory() {
     restDelta: 0.0005,
   });
 
-  const stageDarkness = useTransform(progress, [0.82, 0.94, 1], [1, 0.92, 0]);
-  const handoffOpacity = useTransform(progress, [0.9, 0.97, 1], [0, 0.55, 1]);
+  /*
+   * Build 02.4.2 — Opaque Aperture Handoff
+   *
+   * The 02.4.1 radial field still crossed intermediate alpha over navy, so it
+   * inevitably produced a large grey veil. Clarity is now a fully opaque
+   * aperture that expands behind the resolved product. The dark stage never
+   * fades to grey; pixels are either the dark environment or the clarity field.
+   */
+  const handoffScale = useTransform(
+    progress,
+    [0, 0.94, 0.955, 0.975, 0.99, 1],
+    [0, 0, 0.16, 0.82, 2.45, 4.55],
+  );
 
   if (reduceMotion) {
     return (
@@ -118,17 +129,14 @@ export function SpatialStory() {
   return (
     <section className="spatial-story" id="sistema" ref={sectionRef}>
       <div className="spatial-story__sticky">
-        <motion.div
-          className="spatial-story__dark-field"
-          style={{ opacity: stageDarkness }}
-        />
+        <div className="spatial-story__dark-field" />
 
         <div className="spatial-story__copy-layer">
           <HeroBeat progress={progress} />
 
           <NarrativeBeat
             progress={progress}
-            range={[0.135, 0.19, 0.285, 0.34]}
+            range={[0.175, 0.205, 0.29, 0.325]}
             eyebrow="01 · Operación"
             title="El problema no suele empezar en el software."
             body="Empieza en información dispersa, decisiones que dependen de contexto y procesos que el equipo sostiene como puede."
@@ -136,7 +144,7 @@ export function SpatialStory() {
 
           <NarrativeBeat
             progress={progress}
-            range={[0.31, 0.37, 0.465, 0.525]}
+            range={[0.345, 0.38, 0.47, 0.505]}
             eyebrow="02 · Comprensión"
             title="Primero entendemos qué está ocurriendo."
             body="Qué es evidencia. Qué es contexto. Qué activa una decisión. Qué debería pasar después."
@@ -144,7 +152,7 @@ export function SpatialStory() {
 
           <NarrativeBeat
             progress={progress}
-            range={[0.50, 0.56, 0.655, 0.715]}
+            range={[0.525, 0.56, 0.65, 0.685]}
             eyebrow="03 · Diseño"
             title="Diseñamos alrededor del problema. No de una plantilla."
             body="La estructura aparece antes que la interfaz. La tecnología llega cuando ya sabemos qué tiene que resolver."
@@ -152,7 +160,7 @@ export function SpatialStory() {
 
           <NarrativeBeat
             progress={progress}
-            range={[0.69, 0.755, 0.865, 0.925]}
+            range={[0.705, 0.74, 0.88, 0.915]}
             eyebrow="04 · Software"
             title="Después lo convertimos en software que tu equipo puede usar."
             body="La complejidad no desaparece por magia. Queda contenida en un sistema más claro, operable y hecho para tu realidad."
@@ -163,7 +171,7 @@ export function SpatialStory() {
 
         <motion.div
           className="spatial-story__handoff"
-          style={{ opacity: handoffOpacity }}
+          style={{ scale: handoffScale }}
           aria-hidden="true"
         />
       </div>

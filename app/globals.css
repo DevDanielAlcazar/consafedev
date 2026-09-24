@@ -363,9 +363,17 @@ button:focus-visible {
 
 .spatial-story__handoff {
   position: absolute;
-  z-index: 6;
-  inset: -2px;
+  z-index: 2;
+  top: 20svh;
+  right: -2vmax;
+  width: 44vmax;
+  height: 44vmax;
+  min-width: 560px;
+  min-height: 560px;
+  border-radius: 999px;
   pointer-events: none;
+  transform-origin: 50% 50%;
+  will-change: transform;
   background: var(--clarity);
 }
 
@@ -440,12 +448,7 @@ button:focus-visible {
 }
 
 .sos-clarity-field {
-  z-index: 0;
-  border-radius: 28px;
-  background: var(--clarity);
-  box-shadow: 0 0 110px rgba(214, 238, 239, 0.08);
-  transform-origin: 50% 50%;
-  will-change: transform, opacity;
+  display: none;
 }
 
 .sos-facet {
@@ -1489,6 +1492,98 @@ button:focus-visible {
   filter: brightness(1.07);
 }
 
+
+/* -------------------------------------------------------------------------- */
+/* Build 02.4 — Precision Lock                                                */
+/* -------------------------------------------------------------------------- */
+
+/*
+ * The signature moment is deliberately temporal, not additive. Build 02.4
+ * keeps the exact 02.3 object and compresses its final physical closure into a
+ * short scroll window. These overrides refine material readout at the lock and
+ * make the resolved state quieter immediately afterwards.
+ */
+
+.sos-facet {
+  box-shadow:
+    0 19px 52px rgba(0, 5, 9, 0.14),
+    0 1px 0 rgba(235, 247, 248, 0.052) inset,
+    0 -1px 0 rgba(0, 5, 8, 0.34) inset;
+}
+
+.sos-seam {
+  background: rgba(201, 225, 230, 0.3);
+  box-shadow:
+    0 0 7px rgba(127, 230, 224, 0.038),
+    0 1px 0 rgba(238, 249, 250, 0.035);
+}
+
+.sos-material-reveal {
+  background:
+    radial-gradient(ellipse at 74% 14%, rgba(225, 244, 245, 0.13), transparent 27%),
+    linear-gradient(
+      116deg,
+      transparent 31%,
+      rgba(203, 232, 235, 0.022) 44%,
+      rgba(226, 244, 245, 0.072) 50%,
+      rgba(127, 230, 224, 0.038) 54%,
+      transparent 66%
+    );
+  box-shadow:
+    0 1px 0 rgba(235, 248, 249, 0.045) inset,
+    0 -1px 0 rgba(0, 4, 8, 0.36) inset;
+}
+
+.sos-lock-frame i {
+  border-color: rgba(185, 220, 226, 0.56);
+  filter: drop-shadow(0 0 3px rgba(31, 199, 193, 0.035));
+}
+
+.sos-chassis__perimeter {
+  box-shadow:
+    0 0 0 1px rgba(207, 230, 234, 0.014) inset,
+    0 26px 84px rgba(0, 5, 9, 0.18);
+}
+
+/*
+ * Clarity grows out of the product as a soft radial field instead of a
+ * semi-transparent full-frame wash. Early frames therefore stay dark and
+ * dimensional; the light editorial field arrives only after the lock settles.
+ */
+.sos-clarity-field {
+  background:
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(244, 247, 248, 1) 0%,
+      rgba(244, 247, 248, 0.98) 48%,
+      rgba(244, 247, 248, 0.78) 64%,
+      rgba(244, 247, 248, 0) 80%
+    );
+  box-shadow: 0 0 96px rgba(214, 238, 239, 0.055);
+}
+
+/* Resolved affordance: precise, present, never celebratory. */
+.sos-action--review {
+  border-color: rgba(127, 230, 224, 0.09);
+  background: linear-gradient(90deg, rgba(31, 199, 193, 0.04), transparent 70%);
+}
+
+.sos-action--review::after {
+  opacity: 0.42;
+}
+
+/*
+ * Help the browser composite headline transitions cleanly. Actual narrative
+ * timing remains owned by the story component; this prevents raster smearing
+ * without inventing a second animation system.
+ */
+.hero-copy,
+.narrative-beat {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+
 /* -------------------------------------------------------------------------- */
 /* Reduced motion                                                             */
 /* -------------------------------------------------------------------------- */
@@ -2096,6 +2191,15 @@ button:focus-visible {
   .spatial-story__dark-field::before {
     background-size: 54px 54px;
     mask-image: radial-gradient(circle at 50% 62%, black, transparent 70%);
+  }
+
+  .spatial-story__handoff {
+    top: 36svh;
+    right: -26vw;
+    width: 68vmax;
+    height: 68vmax;
+    min-width: 0;
+    min-height: 0;
   }
 
   .hero-copy,
