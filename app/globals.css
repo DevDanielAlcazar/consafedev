@@ -364,17 +364,15 @@ button:focus-visible {
 .spatial-story__handoff {
   position: absolute;
   z-index: 2;
-  top: 20svh;
-  right: -2vmax;
-  width: 44vmax;
-  height: 44vmax;
-  min-width: 560px;
-  min-height: 560px;
-  border-radius: 999px;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
-  transform-origin: 50% 50%;
-  will-change: transform;
   background: var(--clarity);
+  box-shadow:
+    0 -1px 0 rgba(127, 230, 224, 0.08),
+    0 -30px 84px rgba(3, 10, 15, 0.16);
+  will-change: transform;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2194,12 +2192,9 @@ button:focus-visible {
   }
 
   .spatial-story__handoff {
-    top: 36svh;
-    right: -26vw;
-    width: 68vmax;
-    height: 68vmax;
-    min-width: 0;
-    min-height: 0;
+    inset: 0;
+    width: 100%;
+    height: 100%;
   }
 
   .hero-copy,

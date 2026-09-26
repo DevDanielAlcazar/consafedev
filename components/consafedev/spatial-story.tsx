@@ -88,17 +88,18 @@ export function SpatialStory() {
   });
 
   /*
-   * Build 02.4.2 — Opaque Aperture Handoff
+   * Build 02.5.1 — Clarity Horizon
    *
-   * The 02.4.1 radial field still crossed intermediate alpha over navy, so it
-   * inevitably produced a large grey veil. Clarity is now a fully opaque
-   * aperture that expands behind the resolved product. The dark stage never
-   * fades to grey; pixels are either the dark environment or the clarity field.
+   * Stop treating clarity as an animated mask. A full-width opaque editorial
+   * surface now rises behind the resolved product like the next section
+   * physically entering the stage. There is no alpha blend and no visible
+   * aperture geometry to decode: one clean horizon crosses the viewport and
+   * then disappears because the entire environment has become clarity.
    */
-  const handoffScale = useTransform(
+  const handoffY = useTransform(
     progress,
-    [0, 0.94, 0.955, 0.975, 0.99, 1],
-    [0, 0, 0.16, 0.82, 2.45, 4.55],
+    [0, 0.952, 0.965, 0.978, 0.99, 1],
+    ["102%", "102%", "82%", "46%", "8%", "0%"],
   );
 
   if (reduceMotion) {
@@ -171,7 +172,7 @@ export function SpatialStory() {
 
         <motion.div
           className="spatial-story__handoff"
-          style={{ scale: handoffScale }}
+          style={{ y: handoffY }}
           aria-hidden="true"
         />
       </div>
