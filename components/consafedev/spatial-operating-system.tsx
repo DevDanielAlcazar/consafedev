@@ -23,12 +23,12 @@ export function SpatialOperatingSystem({
    * camera motion settles first, facets retain a trace of tension, then Z,
    * seams, chassis and Review resolve together before the object becomes calm.
    */
-  const cameraRotateX = useTransform(progress, [0, 0.28, 0.56, 0.68, 0.76, 1], [5.8, 4.4, 1.9, 0.62, 0, 0]);
-  const cameraRotateY = useTransform(progress, [0, 0.25, 0.54, 0.68, 0.76, 1], [-10.5, -8.2, -4.2, -1.35, 0, 0]);
-  const cameraRotateZ = useTransform(progress, [0, 0.36, 0.62, 0.74, 1], [-1.4, -1.0, -0.32, 0, 0]);
-  const cameraScale = useTransform(progress, [0, 0.2, 0.54, 0.68, 0.76, 1], [0.91, 0.94, 0.99, 1.004, 1.008, 1.008]);
-  const cameraX = useTransform(progress, [0, 0.35, 0.62, 0.76, 1], [50, 34, 14, 0, 0]);
-  const cameraY = useTransform(progress, [0, 0.42, 0.64, 0.76, 1], [17, 9, 2.5, 0, 0]);
+  const cameraRotateX = useTransform(progress, [0, 0.28, 0.56, 0.67, 0.735, 1], [5.8, 4.4, 1.9, 0.62, 0, 0]);
+  const cameraRotateY = useTransform(progress, [0, 0.25, 0.54, 0.67, 0.735, 1], [-10.5, -8.2, -4.2, -1.35, 0, 0]);
+  const cameraRotateZ = useTransform(progress, [0, 0.36, 0.61, 0.725, 1], [-1.4, -1.0, -0.32, 0, 0]);
+  const cameraScale = useTransform(progress, [0, 0.2, 0.54, 0.67, 0.735, 1], [0.91, 0.94, 0.99, 1.004, 1.008, 1.008]);
+  const cameraX = useTransform(progress, [0, 0.35, 0.61, 0.735, 1], [50, 34, 14, 0, 0]);
+  const cameraY = useTransform(progress, [0, 0.42, 0.63, 0.735, 1], [17, 9, 2.5, 0, 0]);
 
   /* Keep the folds legible, but never so open that they look detached. */
   /*
@@ -36,41 +36,41 @@ export function SpatialOperatingSystem({
    * The final 7–8% of this window is the perceptual lock: all four zones close
    * together instead of dissolving into alignment over a long scroll span.
    */
-  const requestRotateY = useTransform(progress, [0, 0.26, 0.56, 0.7, 0.765, 0.835, 1], [-18, -15, -8.5, -3.4, -2.8, 0, 0]);
-  const requestZ = useTransform(progress, [0, 0.4, 0.68, 0.765, 0.835, 1], [27, 22, 8, 6.5, 0, 0]);
+  const requestRotateY = useTransform(progress, [0, 0.26, 0.56, 0.7, 0.785, 0.822, 1], [-18, -15, -8.5, -3.4, -2.8, 0, 0]);
+  const requestZ = useTransform(progress, [0, 0.4, 0.68, 0.785, 0.822, 1], [27, 22, 8, 6.5, 0, 0]);
 
-  const evidenceRotateY = useTransform(progress, [0, 0.24, 0.55, 0.7, 0.765, 0.835, 1], [31, 27, 16, 7.2, 6.1, 0, 0]);
-  const evidenceZ = useTransform(progress, [0, 0.35, 0.68, 0.765, 0.835, 1], [35, 29, 10, 8, 0, 0]);
+  const evidenceRotateY = useTransform(progress, [0, 0.24, 0.55, 0.7, 0.785, 0.822, 1], [31, 27, 16, 7.2, 6.1, 0, 0]);
+  const evidenceZ = useTransform(progress, [0, 0.35, 0.68, 0.785, 0.822, 1], [35, 29, 10, 8, 0, 0]);
 
-  const contextRotateX = useTransform(progress, [0, 0.26, 0.56, 0.7, 0.765, 0.835, 1], [-34, -29, -17, -7, -5.9, 0, 0]);
-  const contextZ = useTransform(progress, [0, 0.35, 0.68, 0.765, 0.835, 1], [30, 25, 9, 7, 0, 0]);
+  const contextRotateX = useTransform(progress, [0, 0.26, 0.56, 0.7, 0.785, 0.822, 1], [-34, -29, -17, -7, -5.9, 0, 0]);
+  const contextZ = useTransform(progress, [0, 0.35, 0.68, 0.785, 0.822, 1], [30, 25, 9, 7, 0, 0]);
 
-  const actionRotateX = useTransform(progress, [0, 0.28, 0.56, 0.7, 0.765, 0.835, 1], [36, 31, 18, 7.4, 6.2, 0, 0]);
-  const actionZ = useTransform(progress, [0, 0.35, 0.68, 0.765, 0.835, 1], [37, 31, 11, 8.5, 0, 0]);
+  const actionRotateX = useTransform(progress, [0, 0.28, 0.56, 0.7, 0.785, 0.822, 1], [36, 31, 18, 7.4, 6.2, 0, 0]);
+  const actionZ = useTransform(progress, [0, 0.35, 0.68, 0.785, 0.822, 1], [37, 31, 11, 8.5, 0, 0]);
 
   const facetBorderColor = useTransform(
     progress,
-    [0, 0.56, 0.755, 0.825, 0.9, 1],
-    ["rgba(169, 208, 218, 0.15)", "rgba(169, 208, 218, 0.12)", "rgba(174, 209, 217, 0.13)", "rgba(211, 233, 237, 0.205)", "rgba(169, 208, 218, 0.075)", "rgba(169, 208, 218, 0.052)"],
+    [0, 0.56, 0.78, 0.822, 0.87, 1],
+    ["rgba(169, 208, 218, 0.15)", "rgba(169, 208, 218, 0.12)", "rgba(174, 209, 217, 0.13)", "rgba(218, 237, 240, 0.225)", "rgba(169, 208, 218, 0.07)", "rgba(169, 208, 218, 0.052)"],
   );
 
   /* Shared structure is present from frame one and resolves with the facets. */
-  const chassisOpacity = useTransform(progress, [0, 0.18, 0.46, 0.74, 0.805, 0.84, 0.92, 1], [0.34, 0.5, 0.76, 0.88, 0.98, 0.9, 0.73, 0.66]);
-  const hingeOpacity = useTransform(progress, [0, 0.22, 0.56, 0.74, 0.81, 0.855, 0.92, 1], [0.52, 0.7, 0.86, 0.82, 0.98, 0.72, 0.4, 0.26]);
-  const jointScale = useTransform(progress, [0, 0.34, 0.72, 0.805, 0.86, 1], [0.86, 0.96, 1, 0.985, 0.955, 0.955]);
-  const jointOpacity = useTransform(progress, [0, 0.56, 0.74, 0.805, 0.86, 1], [0.54, 0.5, 0.34, 0.22, 0.13, 0.11]);
+  const chassisOpacity = useTransform(progress, [0, 0.18, 0.46, 0.74, 0.795, 0.824, 0.865, 1], [0.34, 0.5, 0.76, 0.88, 0.94, 0.995, 0.7, 0.66]);
+  const hingeOpacity = useTransform(progress, [0, 0.22, 0.56, 0.74, 0.795, 0.824, 0.865, 1], [0.52, 0.7, 0.86, 0.82, 0.9, 0.99, 0.42, 0.26]);
+  const jointScale = useTransform(progress, [0, 0.34, 0.72, 0.795, 0.824, 0.865, 1], [0.86, 0.96, 1, 0.985, 0.962, 0.952, 0.952]);
+  const jointOpacity = useTransform(progress, [0, 0.56, 0.74, 0.795, 0.824, 0.865, 1], [0.54, 0.5, 0.34, 0.24, 0.15, 0.11, 0.11]);
 
-  const rootOpacity = useTransform(progress, [0, 0.42, 0.66, 0.755, 0.825, 0.9, 1], [0.08, 0.14, 0.3, 0.44, 0.94, 0.985, 1]);
-  const rootScale = useTransform(progress, [0, 0.68, 0.755, 0.825, 0.9, 1], [0.982, 0.992, 0.996, 1.001, 1, 1]);
-  const seamOpacity = useTransform(progress, [0, 0.35, 0.66, 0.755, 0.825, 0.875, 0.94, 1], [0.26, 0.48, 0.65, 0.68, 1, 0.58, 0.28, 0.16]);
+  const rootOpacity = useTransform(progress, [0, 0.42, 0.66, 0.78, 0.822, 0.865, 1], [0.08, 0.14, 0.3, 0.44, 0.97, 1, 1]);
+  const rootScale = useTransform(progress, [0, 0.68, 0.78, 0.822, 0.865, 1], [0.982, 0.992, 0.996, 1.0015, 1, 1]);
+  const seamOpacity = useTransform(progress, [0, 0.35, 0.66, 0.78, 0.822, 0.852, 0.9, 1], [0.26, 0.48, 0.65, 0.66, 1, 0.48, 0.22, 0.16]);
 
   /*
    * Precision Lock: reveal material only while geometry closes, then remove
    * the cue so the final product feels quieter than the transition.
    */
-  const materialRevealOpacity = useTransform(progress, [0.65, 0.755, 0.805, 0.835, 0.88, 0.94, 1], [0, 0.08, 0.42, 0.72, 0.24, 0.04, 0]);
-  const lockFrameOpacity = useTransform(progress, [0.7, 0.765, 0.81, 0.84, 0.885, 0.94, 1], [0, 0.08, 0.44, 0.82, 0.32, 0.08, 0.04]);
-  const lockFrameScale = useTransform(progress, [0.7, 0.765, 0.84, 1], [0.991, 0.995, 1, 1]);
+  const materialRevealOpacity = useTransform(progress, [0.68, 0.78, 0.808, 0.824, 0.852, 0.89, 1], [0, 0.06, 0.38, 0.78, 0.18, 0.03, 0]);
+  const lockFrameOpacity = useTransform(progress, [0.72, 0.785, 0.812, 0.827, 0.855, 0.9, 1], [0, 0.06, 0.38, 0.86, 0.22, 0.04, 0.03]);
+  const lockFrameScale = useTransform(progress, [0.72, 0.785, 0.827, 1], [0.992, 0.996, 1, 1]);
 
   /* Causal relationships. They reveal in sequence instead of orbiting. */
   const requestToEvidence = useTransform(progress, [0.14, 0.31, 0.48], [0.08, 0.58, 1]);
@@ -83,7 +83,7 @@ export function SpatialOperatingSystem({
   const requestFocus = useTransform(progress, [0.18, 0.32, 0.54], [0.58, 1, 0.82]);
   const evidenceFocus = useTransform(progress, [0.27, 0.43, 0.66], [0.5, 1, 0.82]);
   const metadataFocus = useTransform(progress, [0.38, 0.56, 0.77], [0.46, 0.9, 0.74]);
-  const revisionFocus = useTransform(progress, [0.54, 0.72, 0.805, 0.845, 1], [0.46, 0.78, 0.82, 1, 1]);
+  const revisionFocus = useTransform(progress, [0.54, 0.72, 0.79, 0.827, 1], [0.46, 0.78, 0.82, 1, 1]);
   const pendingFocus = useTransform(progress, [0.55, 0.78, 0.88, 1], [0.32, 0.5, 0.46, 0.46]);
 
   /*
@@ -91,7 +91,7 @@ export function SpatialOperatingSystem({
    * opaque aperture. Keeping a second semi-transparent clarity field inside the
    * product would recreate the grey veil, so the product itself stays material.
    */
-  const productLift = useTransform(progress, [0.72, 0.82, 0.9, 1], [0, 0.8, 1, 1]);
+  const productLift = useTransform(progress, [0.72, 0.827, 0.872, 1], [0, 0.35, 1, 1]);
 
   const cameraStyle = reducedMotion
     ? {

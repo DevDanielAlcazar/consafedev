@@ -1,9 +1,10 @@
 "use client";
 
-import { useRef, type ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import {
   motion,
   type MotionValue,
+  useMotionValueEvent,
   useReducedMotion,
   useScroll,
   useSpring,
@@ -86,6 +87,24 @@ export function SpatialStory() {
     mass: 0.58,
     restDelta: 0.0005,
   });
+
+  /*
+   * Build 02.6 — Signature Finish
+   *
+   * The fixed navigation should belong to whichever world the visitor is in.
+   * Once the Clarity Horizon has effectively filled the stage, toggle a root
+   * class so the shell becomes editorial rather than remaining a dark floating
+   * capsule over the light half of the page. Reverse scroll restores dark mode.
+   */
+  useMotionValueEvent(progress, "change", (latest) => {
+    document.documentElement.classList.toggle("consafe-clarity-nav", latest >= 0.988);
+  });
+
+  useEffect(() => {
+    return () => {
+      document.documentElement.classList.remove("consafe-clarity-nav");
+    };
+  }, []);
 
   /*
    * Build 02.5.1 — Clarity Horizon
