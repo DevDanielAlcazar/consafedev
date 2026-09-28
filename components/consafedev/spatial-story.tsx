@@ -73,6 +73,78 @@ function HeroBeat({ progress }: { progress: MotionValue<number> }) {
   );
 }
 
+
+function CinematicHeroSequence({
+  progress,
+}: {
+  progress: MotionValue<number>;
+}) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const frameRef = useRef<number | null>(null);
+  const targetTimeRef = useRef(0);
+
+  /*
+   * The 10 s Flow master is treated as a visual timeline, not as autoplay.
+   * The first ~14% of page progress lets the prospect read the Hero.
+   * The final state is held before Clarity Horizon so the resolved system can breathe.
+   */
+  useMotionValueEvent(progress, "change", (latest) => {
+    const video = videoRef.current;
+    if (!video || !Number.isFinite(video.duration) || video.duration <= 0) return;
+
+    const start = 0.14;
+    const end = 0.9;
+    const normalized = Math.min(1, Math.max(0, (latest - start) / (end - start)));
+    targetTimeRef.current = normalized * Math.max(0, video.duration - 0.04);
+
+    if (frameRef.current !== null) return;
+
+    frameRef.current = window.requestAnimationFrame(() => {
+      frameRef.current = null;
+      const media = videoRef.current;
+      if (!media) return;
+
+      const target = targetTimeRef.current;
+      if (Math.abs(media.currentTime - target) > 0.035) {
+        media.currentTime = target;
+      }
+    });
+  });
+
+  useEffect(() => {
+    return () => {
+      if (frameRef.current !== null) {
+        window.cancelAnimationFrame(frameRef.current);
+      }
+    };
+  }, []);
+
+  return (
+    <div className="cinematic-hero" aria-hidden="true">
+      <div className="cinematic-hero__media">
+        <video
+          ref={videoRef}
+          className="cinematic-hero__video"
+          muted
+          playsInline
+          preload="auto"
+          poster="/media/consafedev-operation-fragmented.jpg"
+          tabIndex={-1}
+        >
+          <source src="/media/consafedev-operation-resolve.mp4" type="video/mp4" />
+        </video>
+        <div className="cinematic-hero__left-fade" />
+        <div className="cinematic-hero__vignette" />
+      </div>
+      <div className="cinematic-hero__caption">
+        <span>OPERACIÓN</span>
+        <i aria-hidden="true" />
+        <strong>FRAGMENTADA → RESUELTA</strong>
+      </div>
+    </div>
+  );
+}
+
 export function SpatialStory() {
   const sectionRef = useRef<HTMLElement>(null);
   const reduceMotion = Boolean(useReducedMotion());
@@ -156,38 +228,38 @@ export function SpatialStory() {
 
           <NarrativeBeat
             progress={progress}
-            range={[0.175, 0.205, 0.29, 0.325]}
-            eyebrow="01 · Operación"
-            title="El problema no suele empezar en el software."
-            body="Empieza en información dispersa, decisiones que dependen de contexto y procesos que el equipo sostiene como puede."
+            range={[0.17, 0.195, 0.305, 0.33]}
+            eyebrow="01 · Lo que hoy existe"
+            title="Tu operación puede tener todas las piezas y seguir funcionando a medias."
+            body="Solicitudes, documentos, responsables, fechas y revisiones viven en lugares distintos. El equipo termina haciendo de integración humana."
           />
 
           <NarrativeBeat
             progress={progress}
-            range={[0.345, 0.38, 0.47, 0.505]}
-            eyebrow="02 · Comprensión"
-            title="Primero entendemos qué está ocurriendo."
-            body="Qué es evidencia. Qué es contexto. Qué activa una decisión. Qué debería pasar después."
+            range={[0.35, 0.375, 0.49, 0.515]}
+            eyebrow="02 · Entender"
+            title="Primero hacemos visible cómo se relaciona todo."
+            body="Qué información activa una decisión. Qué es evidencia. Quién necesita contexto. Qué debería ocurrir después."
           />
 
           <NarrativeBeat
             progress={progress}
-            range={[0.525, 0.56, 0.65, 0.685]}
-            eyebrow="03 · Diseño"
-            title="Diseñamos alrededor del problema. No de una plantilla."
-            body="La estructura aparece antes que la interfaz. La tecnología llega cuando ya sabemos qué tiene que resolver."
+            range={[0.535, 0.56, 0.68, 0.705]}
+            eyebrow="03 · Diseñar"
+            title="Convertimos esa lógica en un sistema, no en otra capa de trabajo."
+            body="La estructura nace de tu operación. La tecnología entra cuando ya sabemos qué debe coordinar, automatizar y simplificar."
           />
 
           <NarrativeBeat
             progress={progress}
-            range={[0.705, 0.74, 0.88, 0.915]}
-            eyebrow="04 · Software"
-            title="Después lo convertimos en software que tu equipo puede usar."
-            body="La complejidad no desaparece por magia. Queda contenida en un sistema más claro, operable y hecho para tu realidad."
+            range={[0.725, 0.75, 0.895, 0.925]}
+            eyebrow="04 · Resolver"
+            title="El resultado es software que tu equipo puede usar."
+            body="Menos seguimiento manual. Menos piezas sueltas. Más claridad para que el proceso avance."
           />
         </div>
 
-        <SpatialOperatingSystem progress={progress} />
+        <CinematicHeroSequence progress={progress} />
 
         <motion.div
           className="spatial-story__handoff"

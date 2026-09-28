@@ -337,7 +337,7 @@ button:focus-visible {
 
 .hero-copy {
   top: 25.5svh;
-  width: min(49vw, 720px);
+  width: min(44vw, 650px);
 }
 
 .hero-copy h1 {
@@ -405,6 +405,101 @@ button:focus-visible {
     0 -1px 0 rgba(127, 230, 224, 0.08),
     0 -30px 84px rgba(3, 10, 15, 0.16);
   will-change: transform;
+}
+
+
+/* -------------------------------------------------------------------------- */
+/* Build 03 — Cinematic Hero Prototype                                        */
+/* -------------------------------------------------------------------------- */
+
+.cinematic-hero {
+  position: absolute;
+  z-index: 3;
+  top: 10svh;
+  right: clamp(-74px, -3.8vw, -28px);
+  width: min(69vw, 1050px);
+  height: 78svh;
+  min-height: 590px;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.cinematic-hero__media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #08111b;
+  box-shadow:
+    0 44px 120px rgba(0, 5, 10, 0.24),
+    inset 0 0 0 1px rgba(127, 230, 224, 0.025);
+  transform: translateZ(0);
+}
+
+.cinematic-hero__video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 54% 50%;
+  opacity: 0.96;
+  filter: saturate(0.92) contrast(1.035) brightness(0.92);
+}
+
+.cinematic-hero__left-fade,
+.cinematic-hero__vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.cinematic-hero__left-fade {
+  background:
+    linear-gradient(
+      90deg,
+      #08111b 0%,
+      rgba(8, 17, 27, 0.94) 8%,
+      rgba(8, 17, 27, 0.52) 24%,
+      rgba(8, 17, 27, 0.08) 42%,
+      transparent 58%
+    );
+}
+
+.cinematic-hero__vignette {
+  background:
+    radial-gradient(
+      ellipse at 60% 48%,
+      transparent 46%,
+      rgba(3, 9, 14, 0.05) 68%,
+      rgba(3, 9, 14, 0.28) 100%
+    ),
+    linear-gradient(180deg, rgba(8, 17, 27, 0.2), transparent 18%, transparent 78%, rgba(8, 17, 27, 0.3));
+}
+
+.cinematic-hero__caption {
+  position: absolute;
+  right: clamp(44px, 6vw, 96px);
+  bottom: 4.5svh;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: rgba(177, 199, 208, 0.64);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.cinematic-hero__caption i {
+  width: 26px;
+  height: 1px;
+  background: rgba(31, 199, 193, 0.46);
+}
+
+.cinematic-hero__caption strong {
+  color: rgba(127, 230, 224, 0.82);
+  font-weight: 500;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2547,5 +2642,66 @@ button:focus-visible {
   .button:hover,
   .site-header__cta:hover {
     transform: none;
+  }
+}
+
+
+@media (max-width: 1100px) {
+  .cinematic-hero {
+    top: 16svh;
+    right: -18vw;
+    width: 82vw;
+    height: 69svh;
+    min-height: 520px;
+  }
+
+  .cinematic-hero__left-fade {
+    background:
+      linear-gradient(
+        90deg,
+        #08111b 0%,
+        rgba(8, 17, 27, 0.88) 12%,
+        rgba(8, 17, 27, 0.34) 30%,
+        transparent 53%
+      );
+  }
+
+  .cinematic-hero__caption {
+    right: 18vw;
+  }
+}
+
+@media (max-width: 720px) {
+  .cinematic-hero {
+    top: 38svh;
+    right: -34vw;
+    width: 142vw;
+    height: 54svh;
+    min-height: 0;
+    opacity: 0.82;
+  }
+
+  .cinematic-hero__media {
+    box-shadow: none;
+  }
+
+  .cinematic-hero__video {
+    object-position: 53% 50%;
+    filter: saturate(0.88) contrast(1.03) brightness(0.78);
+  }
+
+  .cinematic-hero__left-fade {
+    background:
+      linear-gradient(
+        180deg,
+        #08111b 0%,
+        rgba(8, 17, 27, 0.78) 17%,
+        rgba(8, 17, 27, 0.08) 47%,
+        rgba(8, 17, 27, 0.34) 100%
+      );
+  }
+
+  .cinematic-hero__caption {
+    display: none;
   }
 }
