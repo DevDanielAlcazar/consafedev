@@ -97,10 +97,21 @@ function CinematicHeroSequence({
   const videoRef = useRef<HTMLVideoElement>(null);
   const frameRef = useRef<number | null>(null);
   const targetTimeRef = useRef(0);
-  const posterOpacity = useTransform(progress, [0, 0.14, 0.19], [1, 1, 0]);
+
+  const synchronizeVideoToProgress = () => {
+    const video = videoRef.current;
+    const latest = progress.get();
+    if (!video || !Number.isFinite(video.duration) || video.duration <= 0) return;
+
+    video.pause();
+    const normalized = Math.min(1, Math.max(0, (latest - 0.14) / (0.9 - 0.14)));
+    const target = normalized * Math.max(0, video.duration - 0.1);
+    targetTimeRef.current = target;
+    if (Math.abs(video.currentTime - target) > 0.035) video.currentTime = target;
+  };
 
   /*
-   * The 10 s Flow master is treated as a visual timeline, not as autoplay.
+   * The 10 s master is treated as a visual timeline, not as autoplay.
    * The first ~14% of page progress lets the prospect read the Hero.
    * The final state is held before Clarity Horizon so the resolved system can breathe.
    */
@@ -109,9 +120,9 @@ function CinematicHeroSequence({
     if (!video || !Number.isFinite(video.duration) || video.duration <= 0) return;
 
     const start = 0.14;
-    const end = 0.88;
+    const end = 0.9;
     const normalized = Math.min(1, Math.max(0, (latest - start) / (end - start)));
-    targetTimeRef.current = normalized * Math.max(0, video.duration - 0.04);
+    targetTimeRef.current = normalized * Math.max(0, video.duration - 0.1);
 
     if (frameRef.current !== null) return;
 
@@ -121,6 +132,7 @@ function CinematicHeroSequence({
       if (!media) return;
 
       const target = targetTimeRef.current;
+      if (!media.paused) media.pause();
       if (Math.abs(media.currentTime - target) > 0.035) {
         media.currentTime = target;
       }
@@ -144,17 +156,14 @@ function CinematicHeroSequence({
           muted
           playsInline
           preload="auto"
-          poster="/media/consafedev-operation-fragmented-v2.jpg"
           tabIndex={-1}
+          onLoadedMetadata={synchronizeVideoToProgress}
+          onLoadedData={synchronizeVideoToProgress}
         >
-          <source src="/media/consafedev-operation-resolve.mp4" type="video/mp4" />
+          <source src="/media/consafedev-operation-resolve-v2.mp4" type="video/mp4" />
         </video>
         <div className="cinematic-hero__left-fade" />
         <div className="cinematic-hero__vignette" />
-        <motion.div
-          className="cinematic-hero__initial-poster"
-          style={{ opacity: posterOpacity }}
-        />
       </div>
       <div className="cinematic-hero__caption">
         <span>OPERACIÓN</span>
@@ -287,11 +296,6 @@ export function SpatialStory() {
               <a className="button button--quiet" href="#capacidades">Explora cómo lo hacemos</a>
             </div>
           </div>
-          <div
-            className="reduced-initial-poster"
-            role="img"
-            aria-label="Operación fragmentada: solicitud, documento, responsable, fecha, revisión y estado pendiente, aún sin conexiones."
-          />
           <div className="reduced-narrative">
             <article><p className="eyebrow">01 · Operación</p><h2>El problema no suele empezar en el software.</h2></article>
             <article><p className="eyebrow">02 · Comprensión</p><h2>Primero entendemos qué está ocurriendo.</h2></article>
