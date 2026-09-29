@@ -393,21 +393,6 @@ button:focus-visible {
   line-height: 1.66;
 }
 
-.spatial-story__handoff {
-  position: absolute;
-  z-index: 2;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  background: var(--clarity);
-  box-shadow:
-    0 -1px 0 rgba(127, 230, 224, 0.08),
-    0 -30px 84px rgba(3, 10, 15, 0.16);
-  will-change: transform;
-}
-
-
 /* -------------------------------------------------------------------------- */
 /* Build 03 — Cinematic Hero Prototype                                        */
 /* -------------------------------------------------------------------------- */
@@ -1794,6 +1779,46 @@ button:focus-visible {
   background: var(--clarity);
 }
 
+.editorial-handoff {
+  display: flex;
+  min-height: 100svh;
+  align-items: center;
+  color: var(--ink);
+  background: var(--clarity);
+}
+
+.editorial-handoff__inner {
+  width: min(100%, 1360px);
+  margin-inline: auto;
+  padding: clamp(132px, 16svh, 196px) clamp(28px, 8.2vw, 126px);
+}
+
+.editorial-handoff .eyebrow {
+  margin: 0 0 26px;
+  color: #55717c;
+}
+
+.editorial-handoff h2 {
+  max-width: 1040px;
+  margin: 0;
+  color: #11202c;
+  font-family: var(--font-space, "Space Grotesk"), var(--font-inter, Inter), sans-serif;
+  font-size: clamp(48px, 6.3vw, 92px);
+  font-weight: 510;
+  line-height: 0.99;
+  letter-spacing: -0.064em;
+  text-wrap: balance;
+}
+
+.editorial-handoff__body {
+  max-width: 720px;
+  margin: 30px 0 0;
+  color: #536974;
+  font-size: clamp(16px, 1.3vw, 18px);
+  line-height: 1.7;
+  letter-spacing: -0.012em;
+}
+
 .editorial-section {
   width: min(100%, var(--max));
   margin: 0 auto;
@@ -2364,12 +2389,6 @@ button:focus-visible {
     mask-image: radial-gradient(circle at 50% 62%, black, transparent 70%);
   }
 
-  .spatial-story__handoff {
-    inset: 0;
-    width: 100%;
-    height: 100%;
-  }
-
   .hero-copy,
   .narrative-beat {
     top: 14svh;
@@ -2490,6 +2509,31 @@ button:focus-visible {
   .editorial-section {
     padding-top: 104px;
     padding-bottom: 104px;
+  }
+
+  .editorial-handoff {
+    min-height: 0;
+  }
+
+  .editorial-handoff__inner {
+    padding: 116px 24px 108px;
+  }
+
+  .editorial-handoff .eyebrow {
+    margin-bottom: 20px;
+    font-size: 9px;
+  }
+
+  .editorial-handoff h2 {
+    font-size: clamp(40px, 11vw, 48px);
+    line-height: 1.02;
+    letter-spacing: -0.058em;
+  }
+
+  .editorial-handoff__body {
+    margin-top: 22px;
+    font-size: 14px;
+    line-height: 1.66;
   }
 
   .editorial-section__intro h2,
