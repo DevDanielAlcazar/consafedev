@@ -285,7 +285,7 @@ button:focus-visible {
 .spatial-story {
   position: relative;
   height: 455svh;
-  background: var(--navy);
+  background: var(--clarity);
 }
 
 .spatial-story__sticky {
@@ -296,6 +296,16 @@ button:focus-visible {
   min-height: 680px;
   overflow: hidden;
   isolation: isolate;
+  background: var(--clarity);
+}
+
+.spatial-story__dark-stage {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  overflow: hidden;
+  background: var(--navy);
+  will-change: transform;
 }
 
 .spatial-story__dark-field {
@@ -430,6 +440,16 @@ button:focus-visible {
   object-position: 54% 50%;
   opacity: 0.96;
   filter: saturate(0.92) contrast(1.035) brightness(0.92);
+}
+
+.cinematic-hero__initial-poster {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: #08111b url("/media/consafedev-operation-fragmented-v2.jpg") center / contain no-repeat;
+  pointer-events: none;
 }
 
 .cinematic-hero__left-fade,
@@ -1730,6 +1750,13 @@ button:focus-visible {
   line-height: 1.65;
 }
 
+.reduced-initial-poster {
+  width: min(100%, 1200px);
+  aspect-ratio: 16 / 9;
+  margin: 42px auto;
+  background: #08111b url("/media/consafedev-operation-fragmented-v2.jpg") center / contain no-repeat;
+}
+
 .sos-viewport--reduced {
   position: relative;
   top: auto;
@@ -1785,6 +1812,14 @@ button:focus-visible {
   align-items: center;
   color: var(--ink);
   background: var(--clarity);
+}
+
+.editorial-handoff--understage {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  min-height: 100svh;
+  overflow: hidden;
 }
 
 .editorial-handoff__inner {
@@ -2722,7 +2757,7 @@ button:focus-visible {
     width: 142vw;
     height: 54svh;
     min-height: 0;
-    opacity: 0.82;
+    opacity: 1;
   }
 
   .cinematic-hero__media {
