@@ -183,12 +183,12 @@ function EditorialHandoff({
   sectionRef: Ref<HTMLElement>;
   progress: MotionValue<number>;
 }) {
-  const eyebrowOpacity = useTransform(progress, [0.944, 0.965], [0, 1]);
-  const eyebrowY = useTransform(progress, [0.944, 0.965], [10, 0]);
-  const headingOpacity = useTransform(progress, [0.952, 0.982], [0, 1]);
-  const headingY = useTransform(progress, [0.952, 0.982], [22, 0]);
-  const bodyOpacity = useTransform(progress, [0.962, 0.997], [0, 1]);
-  const bodyY = useTransform(progress, [0.962, 0.997], [15, 0]);
+  const eyebrowOpacity = useTransform(progress, [0.96, 0.976], [0, 1]);
+  const eyebrowY = useTransform(progress, [0.96, 0.976], [10, 0]);
+  const headingOpacity = useTransform(progress, [0.966, 0.988], [0, 1]);
+  const headingY = useTransform(progress, [0.966, 0.988], [22, 0]);
+  const bodyOpacity = useTransform(progress, [0.975, 0.998], [0, 1]);
+  const bodyY = useTransform(progress, [0.975, 0.998], [15, 0]);
 
   if (reduceMotion) {
     return (
@@ -242,7 +242,18 @@ export function SpatialStory() {
     mass: 0.58,
     restDelta: 0.0005,
   });
-  const stageY = useTransform(progress, [0.92, 1], ["0%", "-100%"]);
+  /*
+   * Build 03.4 — Cinematic Blend & Editorial Landing
+   *
+   * Let the resolved software state breathe before the dark world departs.
+   * The first portion of the departure is deliberately restrained; once the
+   * chapter boundary is established, the stage clears decisively.
+   */
+  const stageY = useTransform(
+    progress,
+    [0.938, 0.966, 1],
+    ["0%", "-18%", "-100%"],
+  );
 
   /*
    * Build 03.2 — Seamless Chapter Transition

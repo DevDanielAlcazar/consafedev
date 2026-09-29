@@ -426,9 +426,7 @@ button:focus-visible {
   aspect-ratio: 16 / 9;
   overflow: hidden;
   background: #08111b;
-  box-shadow:
-    0 44px 120px rgba(0, 5, 10, 0.24),
-    inset 0 0 0 1px rgba(127, 230, 224, 0.025);
+  box-shadow: none;
   transform: translateZ(0);
 }
 
@@ -437,9 +435,12 @@ button:focus-visible {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 54% 50%;
-  opacity: 0.96;
+  object-position: 52% 50%;
+  opacity: 1;
   filter: saturate(0.92) contrast(1.035) brightness(0.92);
+  transform: scale(1.026);
+  transform-origin: 55% 50%;
+  will-change: transform;
 }
 
 .cinematic-hero__left-fade,
@@ -454,22 +455,36 @@ button:focus-visible {
     linear-gradient(
       90deg,
       #08111b 0%,
-      rgba(8, 17, 27, 0.94) 8%,
-      rgba(8, 17, 27, 0.52) 24%,
-      rgba(8, 17, 27, 0.08) 42%,
-      transparent 58%
+      rgba(8, 17, 27, 0.96) 7%,
+      rgba(8, 17, 27, 0.72) 16%,
+      rgba(8, 17, 27, 0.3) 29%,
+      rgba(8, 17, 27, 0.06) 41%,
+      transparent 52%
     );
 }
 
 .cinematic-hero__vignette {
   background:
-    radial-gradient(
-      ellipse at 60% 48%,
-      transparent 46%,
-      rgba(3, 9, 14, 0.05) 68%,
-      rgba(3, 9, 14, 0.28) 100%
+    linear-gradient(
+      180deg,
+      rgba(8, 17, 27, 0.62) 0%,
+      rgba(8, 17, 27, 0.1) 11%,
+      transparent 24%,
+      transparent 74%,
+      rgba(8, 17, 27, 0.14) 86%,
+      rgba(8, 17, 27, 0.72) 100%
     ),
-    linear-gradient(180deg, rgba(8, 17, 27, 0.2), transparent 18%, transparent 78%, rgba(8, 17, 27, 0.3));
+    linear-gradient(
+      270deg,
+      rgba(8, 17, 27, 0.18) 0%,
+      transparent 13%
+    ),
+    radial-gradient(
+      ellipse at 59% 48%,
+      transparent 50%,
+      rgba(3, 9, 14, 0.04) 69%,
+      rgba(3, 9, 14, 0.24) 100%
+    );
 }
 
 .cinematic-hero__caption {
@@ -1806,22 +1821,28 @@ button:focus-visible {
 }
 
 .editorial-handoff__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.28fr) minmax(300px, 0.52fr);
+  column-gap: clamp(64px, 8vw, 132px);
+  align-items: end;
   width: min(100%, 1360px);
   margin-inline: auto;
-  padding: clamp(132px, 16svh, 196px) clamp(28px, 8.2vw, 126px);
+  padding: clamp(152px, 18svh, 220px) clamp(28px, 8.2vw, 126px) clamp(120px, 14svh, 172px);
 }
 
 .editorial-handoff .eyebrow {
-  margin: 0 0 26px;
+  grid-column: 1 / -1;
+  margin: 0 0 30px;
   color: #55717c;
 }
 
 .editorial-handoff h2 {
-  max-width: 1040px;
+  grid-column: 1;
+  max-width: 900px;
   margin: 0;
   color: #11202c;
   font-family: var(--font-space, "Space Grotesk"), var(--font-inter, Inter), sans-serif;
-  font-size: clamp(48px, 6.3vw, 92px);
+  font-size: clamp(48px, 5.75vw, 84px);
   font-weight: 510;
   line-height: 0.99;
   letter-spacing: -0.064em;
@@ -1829,11 +1850,12 @@ button:focus-visible {
 }
 
 .editorial-handoff__body {
-  max-width: 720px;
-  margin: 30px 0 0;
+  grid-column: 2;
+  max-width: 430px;
+  margin: 0 0 7px;
   color: #536974;
-  font-size: clamp(16px, 1.3vw, 18px);
-  line-height: 1.7;
+  font-size: clamp(15px, 1.15vw, 17px);
+  line-height: 1.72;
   letter-spacing: -0.012em;
 }
 
@@ -2318,8 +2340,15 @@ button:focus-visible {
 
   .editorial-section__intro,
   .evidence-posture,
-  .confidence-section__heading {
+  .confidence-section__heading,
+  .editorial-handoff__inner {
     grid-template-columns: 1fr;
+  }
+
+  .editorial-handoff__body {
+    grid-column: 1;
+    max-width: 620px;
+    margin-top: 28px;
   }
 
   .editorial-section__intro > p,
@@ -2534,7 +2563,8 @@ button:focus-visible {
   }
 
   .editorial-handoff__inner {
-    padding: 116px 24px 108px;
+    display: block;
+    padding: 124px 24px 112px;
   }
 
   .editorial-handoff .eyebrow {
@@ -2549,7 +2579,8 @@ button:focus-visible {
   }
 
   .editorial-handoff__body {
-    margin-top: 22px;
+    max-width: 520px;
+    margin-top: 24px;
     font-size: 14px;
     line-height: 1.66;
   }
@@ -2722,9 +2753,10 @@ button:focus-visible {
       linear-gradient(
         90deg,
         #08111b 0%,
-        rgba(8, 17, 27, 0.88) 12%,
-        rgba(8, 17, 27, 0.34) 30%,
-        transparent 53%
+        rgba(8, 17, 27, 0.93) 10%,
+        rgba(8, 17, 27, 0.5) 27%,
+        rgba(8, 17, 27, 0.08) 43%,
+        transparent 54%
       );
   }
 
