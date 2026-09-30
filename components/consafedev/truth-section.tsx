@@ -69,12 +69,6 @@ export function TruthSection() {
           ))}
         </div>
 
-        <div className="method-section__proof">
-          <span>Prueba antes que promesa</span>
-          <p>
-            Cuando entendamos tu contexto, si ya resolvimos algo comparable, te mostramos el caso y las decisiones detrás. Sin inflar números ni vender similitudes que no existen.
-          </p>
-        </div>
       </section>
 
       <section className="editorial-section client-voice" aria-labelledby="client-voice-title">

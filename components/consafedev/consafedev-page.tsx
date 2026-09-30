@@ -7,15 +7,20 @@ import { SiteFooter } from "./site-footer";
 
 export function ConSafeDevPage() {
   return (
-    <main className="consafedev-page" id="inicio">
+    <>
+      <a className="skip-link" href="#sistema">
+        Saltar al contenido
+      </a>
       <SiteHeader />
-      <SpatialStory />
-      <div className="clarity-world">
-        <CapabilitiesSection />
-        <TruthSection />
-        <ContactSection />
-        <SiteFooter />
-      </div>
-    </main>
+      <main className="consafedev-page" id="inicio">
+        <SpatialStory />
+        <div className="clarity-world">
+          <CapabilitiesSection />
+          <TruthSection />
+          <ContactSection />
+          <SiteFooter />
+        </div>
+      </main>
+    </>
   );
 }

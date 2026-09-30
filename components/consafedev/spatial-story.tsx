@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useSyncExternalStore, type ReactNode, type Ref } from "react";
+import { useEffect, useRef, useSyncExternalStore, type MouseEvent, type ReactNode, type Ref } from "react";
 import {
   motion,
   type MotionValue,
@@ -63,7 +63,15 @@ function NarrativeBeat({
   );
 }
 
-function HeroBeat({ progress }: { progress: MotionValue<number> }) {
+function HeroBeat({
+  progress,
+  onContact,
+  onExplore,
+}: {
+  progress: MotionValue<number>;
+  onContact: (event: MouseEvent<HTMLAnchorElement>) => void;
+  onExplore: (event: MouseEvent<HTMLAnchorElement>) => void;
+}) {
   const opacity = useTransform(progress, [0, 0.11, 0.155], [1, 1, 0]);
   const y = useTransform(progress, [0, 0.11, 0.155], [0, 0, -18]);
 
@@ -75,11 +83,11 @@ function HeroBeat({ progress }: { progress: MotionValue<number> }) {
         Diseñamos software a medida que conecta procesos, automatiza operaciones y convierte problemas reales de negocio en sistemas que funcionan.
       </p>
       <div className="hero-copy__actions">
-        <a className="button button--primary" href="#contacto">
+        <a className="button button--primary" href="#contacto" onClick={onContact}>
           Hablemos de lo que necesitas resolver
           <span aria-hidden="true">↗</span>
         </a>
-        <a className="button button--quiet" href="#sistema">
+        <a className="button button--quiet" href="#sistema" onClick={onExplore}>
           Explora cómo lo hacemos
           <span aria-hidden="true">↓</span>
         </a>
@@ -156,19 +164,23 @@ function CinematicHeroSequence({
           muted
           playsInline
           preload="auto"
+          poster="/media/consafedev-operation-start-rc1.webp"
           tabIndex={-1}
           onLoadedMetadata={synchronizeVideoToProgress}
           onLoadedData={synchronizeVideoToProgress}
         >
-          <source src="/media/consafedev-operation-resolve-v2.mp4" type="video/mp4" />
+          <source
+            media="(max-width: 740px)"
+            src="/media/consafedev-operation-resolve-mobile-rc1.mp4"
+            type="video/mp4"
+          />
+          <source
+            src="/media/consafedev-operation-resolve-rc1.mp4"
+            type="video/mp4"
+          />
         </video>
         <div className="cinematic-hero__left-fade" />
         <div className="cinematic-hero__vignette" />
-      </div>
-      <div className="cinematic-hero__caption">
-        <span>OPERACIÓN</span>
-        <i aria-hidden="true" />
-        <strong>FRAGMENTADA → RESUELTA</strong>
       </div>
     </div>
   );
@@ -242,6 +254,40 @@ export function SpatialStory() {
     mass: 0.58,
     restDelta: 0.0005,
   });
+
+  const handleHeroContact = (event: MouseEvent<HTMLAnchorElement>) => {
+    const contact = document.getElementById("contacto");
+    if (!contact) return;
+
+    event.preventDefault();
+    contact.scrollIntoView({
+      behavior: reduceMotion ? "auto" : "smooth",
+      block: "start",
+    });
+  };
+
+  const handleHeroExplore = (event: MouseEvent<HTMLAnchorElement>) => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    event.preventDefault();
+
+    if (reduceMotion) {
+      document.getElementById("capacidades")?.scrollIntoView({
+        behavior: "auto",
+        block: "start",
+      });
+      return;
+    }
+
+    const sectionTop = window.scrollY + section.getBoundingClientRect().top;
+    const scrollableDistance = Math.max(0, section.offsetHeight - window.innerHeight);
+
+    window.scrollTo({
+      top: sectionTop + scrollableDistance * 0.205,
+      behavior: "smooth",
+    });
+  };
   /*
    * Build 03.4 — Cinematic Blend & Editorial Landing
    *
@@ -328,7 +374,11 @@ export function SpatialStory() {
             <div className="spatial-story__dark-field" />
 
             <div className="spatial-story__copy-layer">
-              <HeroBeat progress={progress} />
+              <HeroBeat
+                progress={progress}
+                onContact={handleHeroContact}
+                onExplore={handleHeroExplore}
+              />
 
               <NarrativeBeat
                 progress={progress}

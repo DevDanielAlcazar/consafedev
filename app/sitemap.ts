@@ -1,11 +1,12 @@
-import { MetadataRoute } from 'next';
+import { MetadataRoute } from "next";
+import { siteConfig } from "@/lib/consafedev/site-config";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
-      url: 'https://consafedev.com',
+      url: siteConfig.siteUrl,
       lastModified: new Date(),
-      changeFrequency: 'weekly',
+      changeFrequency: "weekly",
       priority: 1,
     },
   ];
