@@ -77,6 +77,48 @@ export function TruthSection() {
         </div>
       </section>
 
+      <section className="editorial-section client-voice" aria-labelledby="client-voice-title">
+        <div className="client-voice__heading">
+          <p className="eyebrow eyebrow--dark">Voces del cliente</p>
+          <h2 id="client-voice-title">Cuando el software sí encaja, se nota en la operación.</h2>
+          <p>
+            No son promesas de marketing. Son clientes describiendo qué cambió cuando el equipo entendió primero el problema y construyó después.
+          </p>
+        </div>
+
+        <figure className="client-voice__lead">
+          <blockquote>
+            “No simplemente recopilaron requisitos; nos ayudaron a pensar en problemas complejos y tradujeron nuestros desafíos en soluciones prácticas.”
+          </blockquote>
+          <figcaption>
+            <strong>Department Manager</strong>
+            <span>Eye Recommend · Red de clínicas de optometría</span>
+          </figcaption>
+        </figure>
+
+        <div className="client-voice__support">
+          <figure>
+            <blockquote>
+              “Esta nueva versión ha reducido sustancialmente los tickets de soporte de usuarios, lo cual es genial para nuestros clientes y nuestras operaciones.”
+            </blockquote>
+            <figcaption>
+              <strong>Simon Robinson</strong>
+              <span>Senior Product Owner · 4Com Technologies Limited</span>
+            </figcaption>
+          </figure>
+
+          <figure>
+            <blockquote>
+              “No solo ejecutan nuestra visión, sino que también contribuyen con ideas valiosas que hemos implementado exitosamente.”
+            </blockquote>
+            <figcaption>
+              <strong>Grzegorz Wosicki</strong>
+              <span>Fundador y CEO · RideCraft</span>
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
       <section className="confidence-section confidence-section--decision" aria-labelledby="confidence-title">
         <div className="confidence-section__heading">
           <div>
