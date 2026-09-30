@@ -3551,3 +3551,24 @@ button:focus-visible {
     font-size: 23px;
   }
 }
+
+
+/* Build 05.1 — Conversion wiring ------------------------------------------ */
+
+.contact-section__microcopy {
+  margin: 18px 0 0;
+  color: #536974;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 740px) {
+  .contact-section__microcopy {
+    margin-top: 16px;
+    font-size: 9px;
+  }
+}

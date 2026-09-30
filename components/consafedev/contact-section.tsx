@@ -17,7 +17,7 @@ export function ContactSection() {
         <p className="eyebrow">Empecemos por el problema</p>
         <h2 id="contact-title">Cuéntanos dónde se está rompiendo tu operación.</h2>
         <p>
-          No necesitas llegar con requerimientos, diagramas ni saber qué tecnología pedir. Explícanos qué pasa hoy, qué debería pasar y qué te está costando mantenerlo así. Nosotros te ayudamos a convertirlo en un siguiente paso concreto.
+          No necesitas llegar con requerimientos, diagramas ni saber qué tecnología pedir. Explícanos qué pasa hoy, qué debería pasar y dónde se te está yendo tiempo, dinero o control. Nosotros te ayudamos a convertirlo en un siguiente paso concreto.
         </p>
       </div>
 
@@ -26,7 +26,7 @@ export function ContactSection() {
           className="button button--primary button--large"
           href={bookingHref}
           target={bookingExternal ? "_blank" : undefined}
-          rel={bookingExternal ? "noreferrer" : undefined}
+          rel={bookingExternal ? "noopener noreferrer" : undefined}
           data-booking-configured={siteConfig.bookingUrl ? "true" : "false"}
         >
           Revisemos tu operación
@@ -38,13 +38,17 @@ export function ContactSection() {
             className="button button--outline button--large"
             href={siteConfig.whatsappUrl}
             target={whatsappExternal ? "_blank" : undefined}
-            rel={whatsappExternal ? "noreferrer" : undefined}
+            rel={whatsappExternal ? "noopener noreferrer" : undefined}
           >
             Contarlo por WhatsApp
             <span aria-hidden="true">↗</span>
           </a>
         ) : null}
       </div>
+
+      <p className="contact-section__microcopy">
+        30 min · Google Meet · Sin compromiso
+      </p>
 
       {!siteConfig.bookingUrl && process.env.NODE_ENV !== "production" ? (
         <p className="contact-section__config-hint">
