@@ -17,7 +17,7 @@ export function ContactSection() {
         <p className="eyebrow">Empecemos por el problema</p>
         <h2 id="contact-title">Cuéntanos dónde se está rompiendo tu operación.</h2>
         <p>
-          No necesitas llegar con requerimientos, diagramas ni saber qué tecnología pedir. Explícanos qué pasa hoy, qué debería pasar y dónde se te está yendo tiempo, dinero o control. Nosotros te ayudamos a convertirlo en un siguiente paso concreto.
+          No necesitas llegar con requerimientos, diagramas ni saber qué tecnología pedir. Explícanos qué pasa hoy, qué debería pasar o dónde estás perdiendo tiempo, dinero o control. Nosotros te ayudamos a convertirlo en un siguiente paso concreto.
         </p>
       </div>
 
