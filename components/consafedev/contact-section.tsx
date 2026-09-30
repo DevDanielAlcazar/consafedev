@@ -6,7 +6,7 @@ export function ContactSection() {
   const whatsappExternal = isExternalHref(siteConfig.whatsappUrl);
 
   return (
-    <section className="contact-section" id="contacto" aria-labelledby="contact-title">
+    <section className="contact-section contact-section--problem" id="contacto" aria-labelledby="contact-title">
       <div className="contact-section__signal" aria-hidden="true">
         <span />
         <span />
@@ -14,10 +14,10 @@ export function ContactSection() {
       </div>
 
       <div className="contact-section__copy">
-        <p className="eyebrow">El siguiente paso puede ser simple</p>
-        <h2 id="contact-title">Cuéntanos qué necesitas resolver.</h2>
+        <p className="eyebrow">Empecemos por el problema</p>
+        <h2 id="contact-title">Cuéntanos dónde se está rompiendo tu operación.</h2>
         <p>
-          Revisamos contigo el problema, el contexto y lo que tendría sentido construir. Si vemos una oportunidad real de generar valor, definimos el siguiente paso. Si no, terminamos la sesión sin compromiso y sin problema.
+          No necesitas llegar con requerimientos, diagramas ni saber qué tecnología pedir. Explícanos qué pasa hoy, qué debería pasar y qué te está costando mantenerlo así. Nosotros te ayudamos a convertirlo en un siguiente paso concreto.
         </p>
       </div>
 
@@ -29,7 +29,7 @@ export function ContactSection() {
           rel={bookingExternal ? "noreferrer" : undefined}
           data-booking-configured={siteConfig.bookingUrl ? "true" : "false"}
         >
-          Agendar una conversación
+          Revisemos tu operación
           <span aria-hidden="true">↗</span>
         </a>
 
@@ -40,7 +40,7 @@ export function ContactSection() {
             target={whatsappExternal ? "_blank" : undefined}
             rel={whatsappExternal ? "noreferrer" : undefined}
           >
-            Escribir por WhatsApp
+            Contarlo por WhatsApp
             <span aria-hidden="true">↗</span>
           </a>
         ) : null}

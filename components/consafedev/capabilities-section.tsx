@@ -1,48 +1,78 @@
-const capabilities = [
+const capabilityPaths = [
   {
     index: "01",
-    title: "Software que encaja con tu operación",
-    body: "Aplicaciones, plataformas, sistemas internos y herramientas a medida para procesos que no caben bien en una plantilla.",
-    detail: "Web apps · plataformas internas · SaaS · soluciones a medida",
+    problem: "Tu equipo persigue información entre hojas, correos y mensajes.",
+    intervention:
+      "Convertimos el flujo real en un sistema interno que concentra contexto, responsables, estados y decisiones.",
+    outcome: "Una operación visible y trazable.",
+    detail: "Solicitudes · aprobaciones · seguimiento · operación",
   },
   {
     index: "02",
-    title: "Operaciones que dejan de depender de trabajo manual",
-    body: "Automatizamos pasos repetitivos, validaciones, seguimiento y decisiones operativas. Con IA cuando aporta valor; sin IA cuando no hace falta.",
-    detail: "Automatización · IA aplicada · flujos · orquestación",
+    problem: "Hay trabajo que se repite porque nadie lo automatizó bien.",
+    intervention:
+      "Detectamos pasos repetitivos, validaciones y handoffs. Automatizamos lo que sí conviene, con IA sólo cuando aporta.",
+    outcome: "Menos tareas manuales. Más tiempo para decidir.",
+    detail: "Validaciones · alertas · documentos · automatización",
   },
   {
     index: "03",
-    title: "Herramientas que trabajan juntas",
-    body: "Conectamos sistemas, información y equipos para reducir duplicidad, retrabajo y puntos ciegos entre procesos.",
-    detail: "Integraciones · APIs · datos · sistemas conectados",
+    problem: "Tus herramientas saben cosas distintas y tu equipo hace de puente.",
+    intervention:
+      "Conectamos sistemas y datos para que la información llegue donde debe sin recapturas, dobles procesos ni puntos ciegos.",
+    outcome: "Una operación conectada, no una colección de sistemas.",
+    detail: "Ventas · inventario · proveedores · datos",
   },
   {
     index: "04",
-    title: "Productos que pueden crecer contigo",
-    body: "Construimos experiencias digitales con una base técnica preparada para evolucionar sin convertir cada cambio en una reconstrucción.",
-    detail: "Web · móvil · plataformas comerciales · producto digital",
+    problem: "Lo que hoy usas ya no alcanza para cómo creció el negocio.",
+    intervention:
+      "Diseñamos una plataforma o producto a medida que pueda evolucionar sin obligarte a reconstruir todo cada vez.",
+    outcome: "Software que crece contigo.",
+    detail: "Plataformas · portales · producto digital · sistemas internos",
   },
 ] as const;
 
 export function CapabilitiesSection() {
   return (
-    <section className="editorial-section capabilities" id="capacidades">
-      <div className="editorial-section__intro">
-        <p className="eyebrow eyebrow--dark">Qué podemos construir</p>
-        <h2>La tecnología cambia. El problema correcto sigue siendo el punto de partida.</h2>
+    <section className="editorial-section capabilities capabilities--decision" id="capacidades">
+      <div className="capabilities__intro">
+        <p className="eyebrow eyebrow--dark">Qué podemos resolver</p>
+        <h2>
+          No necesitas saber qué tecnología pedir. Necesitas que el problema deje de estorbar.
+        </h2>
         <p>
-          Elegimos arquitectura, automatización e interfaces por lo que tu operación necesita conseguir, no por lo que esté de moda esa semana.
+          Llegas con una operación, una fricción o una idea. Nosotros aterrizamos qué conviene construir, automatizar o conectar para que el resultado tenga sentido.
         </p>
       </div>
 
-      <div className="capability-list">
-        {capabilities.map((capability) => (
-          <article className="capability-row" key={capability.index}>
-            <span className="capability-row__index">{capability.index}</span>
-            <h3>{capability.title}</h3>
-            <p>{capability.body}</p>
-            <small>{capability.detail}</small>
+      <div className="capability-paths">
+        <div className="capability-paths__legend" aria-hidden="true">
+          <span />
+          <span>Lo que hoy pasa</span>
+          <span>Lo que hacemos</span>
+          <span>Lo que cambia</span>
+        </div>
+
+        {capabilityPaths.map((capability) => (
+          <article className="capability-path" key={capability.index}>
+            <span className="capability-path__index">{capability.index}</span>
+
+            <div className="capability-path__problem">
+              <span className="capability-path__label">Lo que hoy pasa</span>
+              <h3>{capability.problem}</h3>
+            </div>
+
+            <div className="capability-path__intervention">
+              <span className="capability-path__label">Lo que hacemos</span>
+              <p>{capability.intervention}</p>
+            </div>
+
+            <div className="capability-path__outcome">
+              <span className="capability-path__label">Lo que cambia</span>
+              <strong>{capability.outcome}</strong>
+              <small>{capability.detail}</small>
+            </div>
           </article>
         ))}
       </div>
